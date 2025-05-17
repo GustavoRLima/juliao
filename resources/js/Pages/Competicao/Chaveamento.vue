@@ -1,0 +1,252 @@
+<template>
+  <div class="flex flex-col items-center bg-gray-900 min-h-screen p-6">
+    <h1 class="text-2xl font-bold mb-6 text-white">Chave de Competição</h1>
+
+    <div class="flex overflow-x-auto">
+      <!-- Lado Esquerdo -->
+      <div class="flex">
+        <div
+          v-for="(round, rIndex) in leftRounds"
+          :key="'left-' + rIndex"
+          class="flex flex-col items-center mx-2"
+          :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }"
+        >
+          <div
+            v-for="(match, mIndex) in getMatches(round)"
+            :key="'left-match-' + mIndex"
+            class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-48"
+          >
+            <div
+              v-for="(player, pIndex) in match"
+              :key="pIndex"
+              class="w-full h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-sm"
+              :class="{
+                'bg-green-700': isWinner('left', rIndex, mIndex, pIndex),
+                'opacity-50 pointer-events-none': opponentWon('left', rIndex, mIndex, pIndex),
+              }"
+              @click="handleClick('left', rIndex, mIndex, pIndex)"
+            >
+              {{ player || '--' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Final -->
+      <div class="flex flex-col justify-center mx-4">
+        <div class="w-48 border border-yellow-500 rounded-lg p-2 mb-4 flex flex-col items-center text-center font-semibold text-yellow-500">
+          <div class="text-white mb-2">FINAL</div>
+          <div v-if="finalMatch.length === 2">
+            <div
+              v-for="(player, index) in finalMatch"
+              :key="index"
+              class="w-full h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-sm"
+              :class="{
+                'bg-green-700': finalWinner === player,
+                'opacity-50 pointer-events-none': finalWinner && finalWinner !== player,
+              }"
+              @click="selectFinalWinner(player)"
+            >
+              {{ player || '--' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lado Direito (reverso) -->
+      <div class="flex flex-row-reverse">
+        <div
+          v-for="(round, rIndex) in rightRounds"
+          :key="'right-' + rIndex"
+          class="flex flex-col items-center mx-2"
+          :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }"
+        >
+          <div
+            v-for="(match, mIndex) in getMatches(round)"
+            :key="'right-match-' + mIndex"
+            class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-48"
+          >
+            <div
+              v-for="(player, pIndex) in match"
+              :key="pIndex"
+              class="w-full h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-sm"
+              :class="{
+                'bg-green-700': isWinner('right', rIndex, mIndex, pIndex),
+                'opacity-50 pointer-events-none': opponentWon('right', rIndex, mIndex, pIndex),
+              }"
+              @click="handleClick('right', rIndex, mIndex, pIndex)"
+            >
+              {{ player || '--' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pódio -->
+    <div v-if="showPodium" class="mt-8 w-full max-w-md">
+      <h2 class="text-xl font-bold text-white mb-4 text-center">Pódio</h2>
+      <table class="w-full text-white border border-white rounded-lg">
+        <thead>
+          <tr>
+            <th class="border-b border-white p-2">Posição</th>
+            <th class="border-b border-white p-2">Competidor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border-b border-white p-2">1º</td>
+            <td class="border-b border-white p-2">{{ finalWinner }}</td>
+          </tr>
+          <tr>
+            <td class="border-b border-white p-2">2º</td>
+            <td class="border-b border-white p-2">{{ secondPlace }}</td>
+          </tr>
+          <tr v-for="(third, index) in thirdPlaces" :key="index">
+            <td class="border-b border-white p-2">3º</td>
+            <td class="border-b border-white p-2">{{ third }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { reactive, computed, ref, onMounted } from 'vue'
+import Swal from 'sweetalert2'
+
+interface Props {
+  competitors: string[]
+}
+
+const props = defineProps<Props>()
+
+function getNextPowerOfTwo(n: number): number {
+  return Math.pow(2, Math.ceil(Math.log2(n)))
+}
+
+function generateRounds(players: (string | null)[]) {
+  const rounds: (string | null)[][] = []
+  let current = players
+  while (current.length > 1) {
+    rounds.push([...current])
+    current = Array(Math.ceil(current.length / 2)).fill(null)
+  }
+  rounds.push([null]) // final
+  return rounds
+}
+
+const leftState = reactive({ rounds: [] as (string | null)[][] })
+const rightState = reactive({ rounds: [] as (string | null)[][] })
+const finalMatch = ref<(string | null)[]>([])
+const finalWinner = ref<string | null>(null)
+const secondPlace = ref<string | null>(null)
+const thirdPlaces = ref<string[]>([])
+const showPodium = ref(false)
+
+function initRounds() {
+  const half = Math.ceil(props.competitors.length / 2)
+  const left = [...props.competitors.slice(0, half)]
+  const right = [...props.competitors.slice(half)]
+
+  const leftFilled = [...left, ...Array(getNextPowerOfTwo(half) - left.length).fill(null)]
+  const rightFilled = [...right, ...Array(getNextPowerOfTwo(right.length) - right.length).fill(null)]
+
+  leftState.rounds = generateRounds(leftFilled)
+  rightState.rounds = generateRounds(rightFilled)
+  finalMatch.value = [null, null]
+  finalWinner.value = null
+  secondPlace.value = null
+  thirdPlaces.value = []
+  showPodium.value = false
+}
+
+function getMatches(round: (string | null)[]) {
+  const matches = []
+  for (let i = 0; i < round.length; i += 2) {
+    matches.push([round[i], round[i + 1]])
+  }
+  return matches
+}
+
+function isWinner(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number) {
+  const currentSide = side === 'left' ? leftState : rightState
+  const nextRound = roundIndex + 1
+  const winner = currentSide.rounds[nextRound]?.[matchIndex]
+  return winner && winner === currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
+}
+
+function opponentWon(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number) {
+  const currentSide = side === 'left' ? leftState : rightState
+  const nextRound = roundIndex + 1
+  const thisPlayer = currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
+  const otherIndex = playerIndex === 0 ? 1 : 0
+  const opponent = currentSide.rounds[roundIndex][matchIndex * 2 + otherIndex]
+  const winner = currentSide.rounds[nextRound]?.[matchIndex]
+  return winner && winner === opponent
+}
+
+async function handleClick(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number) {
+  const currentSide = side === 'left' ? leftState : rightState
+  const currentPlayer = currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
+  const nextRound = roundIndex + 1
+
+  if (!currentPlayer) return
+
+  const confirmed = await Swal.fire({
+    title: `Deseja declarar ${currentPlayer} como vencedor?`,
+    showCancelButton: true,
+    confirmButtonText: 'Sim',
+    cancelButtonText: 'Não'
+  })
+
+  if (confirmed.isConfirmed) {
+    currentSide.rounds[nextRound][matchIndex] = currentPlayer
+
+    // Se for a última rodada antes da final
+    if (nextRound === currentSide.rounds.length - 1) {
+      finalMatch.value[side === 'left' ? 0 : 1] = currentPlayer
+    }
+  }
+}
+
+async function selectFinalWinner(player: string | null) {
+  if (!player) return
+
+  const confirm = await Swal.fire({
+    title: `Deseja declarar ${player} como vencedor da final?`,
+    showCancelButton: true,
+    confirmButtonText: 'Sim',
+    cancelButtonText: 'Não'
+  })
+
+  if (confirm.isConfirmed) {
+    finalWinner.value = player
+    secondPlace.value = finalMatch.value.find(p => p !== player) || null
+
+    const thirdLeft = leftState.rounds[leftState.rounds.length - 2].find(p => p !== finalMatch.value[0])
+    const thirdRight = rightState.rounds[rightState.rounds.length - 2].find(p => p !== finalMatch.value[1])
+
+    thirdPlaces.value = [thirdLeft, thirdRight].filter(Boolean) as string[]
+    showPodium.value = true
+  }
+}
+
+onMounted(() => {
+  initRounds()
+})
+
+const leftRounds = computed(() => leftState.rounds.slice(0, -1))
+const rightRounds = computed(() => rightState.rounds.slice(0, -1))
+</script>
+
+<style scoped>
+::-webkit-scrollbar {
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+</style>
