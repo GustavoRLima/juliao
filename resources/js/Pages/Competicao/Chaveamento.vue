@@ -1,117 +1,3 @@
-<template>
-  <div class="flex flex-col items-center bg-gray-900 min-h-screen p-6">
-    <h1 class="text-2xl font-bold mb-6 text-white">Chave de Competição</h1>
-
-    <div class="flex overflow-x-auto">
-      <!-- Lado Esquerdo -->
-      <div class="flex">
-        <div
-          v-for="(round, rIndex) in leftRounds"
-          :key="'left-' + rIndex"
-          class="flex flex-col items-center mx-2"
-          :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }"
-        >
-          <div
-            v-for="(match, mIndex) in getMatches(round)"
-            :key="'left-match-' + mIndex"
-            class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-48"
-          >
-            <div
-              v-for="(player, pIndex) in match"
-              :key="pIndex"
-              class="w-full h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-sm"
-              :class="{
-                'bg-green-700': isWinner('left', rIndex, mIndex, pIndex),
-                'opacity-50 pointer-events-none': opponentWon('left', rIndex, mIndex, pIndex),
-              }"
-              @click="handleClick('left', rIndex, mIndex, pIndex)"
-            >
-              {{ player || '--' }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Final -->
-      <div class="flex flex-col justify-center mx-4">
-        <div class="w-48 border border-yellow-500 rounded-lg p-2 mb-4 flex flex-col items-center text-center font-semibold text-yellow-500">
-          <div class="text-white mb-2">FINAL</div>
-          <div v-if="finalMatch.length === 2">
-            <div
-              v-for="(player, index) in finalMatch"
-              :key="index"
-              class="w-full h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-sm"
-              :class="{
-                'bg-green-700': finalWinner === player,
-                'opacity-50 pointer-events-none': finalWinner && finalWinner !== player,
-              }"
-              @click="selectFinalWinner(player)"
-            >
-              {{ player || '--' }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Lado Direito (reverso) -->
-      <div class="flex flex-row-reverse">
-        <div
-          v-for="(round, rIndex) in rightRounds"
-          :key="'right-' + rIndex"
-          class="flex flex-col items-center mx-2"
-          :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }"
-        >
-          <div
-            v-for="(match, mIndex) in getMatches(round)"
-            :key="'right-match-' + mIndex"
-            class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-48"
-          >
-            <div
-              v-for="(player, pIndex) in match"
-              :key="pIndex"
-              class="w-full h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-sm"
-              :class="{
-                'bg-green-700': isWinner('right', rIndex, mIndex, pIndex),
-                'opacity-50 pointer-events-none': opponentWon('right', rIndex, mIndex, pIndex),
-              }"
-              @click="handleClick('right', rIndex, mIndex, pIndex)"
-            >
-              {{ player || '--' }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pódio -->
-    <div v-if="showPodium" class="mt-8 w-full max-w-md">
-      <h2 class="text-xl font-bold text-white mb-4 text-center">Pódio</h2>
-      <table class="w-full text-white border border-white rounded-lg">
-        <thead>
-          <tr>
-            <th class="border-b border-white p-2">Posição</th>
-            <th class="border-b border-white p-2">Competidor</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="border-b border-white p-2">1º</td>
-            <td class="border-b border-white p-2">{{ finalWinner }}</td>
-          </tr>
-          <tr>
-            <td class="border-b border-white p-2">2º</td>
-            <td class="border-b border-white p-2">{{ secondPlace }}</td>
-          </tr>
-          <tr v-for="(third, index) in thirdPlaces" :key="index">
-            <td class="border-b border-white p-2">3º</td>
-            <td class="border-b border-white p-2">{{ third }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { reactive, computed, ref, onMounted } from 'vue'
 import Swal from 'sweetalert2'
@@ -187,28 +73,52 @@ function opponentWon(side: 'left' | 'right', roundIndex: number, matchIndex: num
   return winner && winner === opponent
 }
 
+
 async function handleClick(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number) {
   const currentSide = side === 'left' ? leftState : rightState
   const currentPlayer = currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
   const nextRound = roundIndex + 1
 
-  if (!currentPlayer) return
-
-  const confirmed = await Swal.fire({
-    title: `Deseja declarar ${currentPlayer} como vencedor?`,
-    showCancelButton: true,
-    confirmButtonText: 'Sim',
-    cancelButtonText: 'Não'
-  })
-
-  if (confirmed.isConfirmed) {
-    currentSide.rounds[nextRound][matchIndex] = currentPlayer
-
-    // Se for a última rodada antes da final
-    if (nextRound === currentSide.rounds.length - 1) {
-      finalMatch.value[side === 'left' ? 0 : 1] = currentPlayer
+  if(roundIndex > 0){
+    const numberValid = parOuImpar(playerIndex);
+    if(!currentSide.rounds[roundIndex][matchIndex * 2 + (playerIndex+numberValid)]){
+      Swal.fire('Alerta', 'Informe o adversario para continuar!', 'warning');
+      return;
     }
   }
+
+  if (!currentPlayer) return
+
+  const winner = currentSide.rounds[nextRound]?.[matchIndex]
+  if (winner === currentPlayer) {
+    const confirmed = await Swal.fire({
+      title: `Deseja remover a vitória de ${currentPlayer}?`,
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Não'
+    })
+    if (confirmed.isConfirmed) {
+      currentSide.rounds[nextRound][matchIndex] = null
+    }
+  } else if (!winner) {
+    const confirmed = await Swal.fire({
+      title: `Deseja declarar ${currentPlayer} como vencedor?`,
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Não'
+    })
+    if (confirmed.isConfirmed) {
+      currentSide.rounds[nextRound][matchIndex] = currentPlayer
+
+      if (nextRound === currentSide.rounds.length - 1) {
+        finalMatch.value[side === 'left' ? 0 : 1] = currentPlayer
+      }
+    }
+  }
+}
+
+function parOuImpar(numero: number) {
+  return numero % 2 === 0 ? 1 : -1;
 }
 
 async function selectFinalWinner(player: string | null) {
@@ -240,6 +150,102 @@ onMounted(() => {
 const leftRounds = computed(() => leftState.rounds.slice(0, -1))
 const rightRounds = computed(() => rightState.rounds.slice(0, -1))
 </script>
+
+<template>
+  <div class="flex flex-col items-center bg-gray-900 min-h-screen px-4 py-6 sm:px-6">
+    <h1 class="text-2xl font-bold mb-6 text-white text-center">Chave de Competição</h1>
+
+    <!-- Container com scroll horizontal -->
+    <div class="w-full overflow-x-auto max-w-full overflow-y-hidden pb-4">
+      <div class="flex">
+
+        <!-- Lado Esquerdo -->
+        <div class="flex">
+          <div v-for="(round, rIndex) in leftRounds" :key="'left-' + rIndex"
+            class="flex flex-col items-center mx-1 sm:mx-2"
+            :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }">
+            <div v-for="(match, mIndex) in getMatches(round)" :key="'left-match-' + mIndex"
+              class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-40 sm:w-48 mt-auto mb-auto">
+              <div v-for="(player, pIndex) in match" :key="pIndex"
+                class="w-full h-10 sm:h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-xs sm:text-sm text-center"
+                :class="{
+                  'bg-green-700': isWinner('left', rIndex, mIndex, pIndex),
+                  'opacity-50 pointer-events-none': opponentWon('left', rIndex, mIndex, pIndex),
+                }" @click="handleClick('left', rIndex, mIndex, pIndex)">
+                {{ player || '--' }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Final -->
+        <div class="flex flex-col justify-center mx-2 sm:mx-4">
+          <div
+            class="w-40 sm:w-48 border border-yellow-500 rounded-lg p-2 mb-4 flex flex-col items-center text-center font-semibold text-yellow-500  mt-auto mb-auto">
+            <div class="text-white mb-2">FINAL</div>
+            <div v-if="finalMatch.length === 2">
+              <div v-for="(player, index) in finalMatch" :key="index"
+                class="w-full h-10 sm:h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-xs sm:text-sm text-center"
+                :class="{
+                  'bg-green-700': finalWinner === player,
+                  'opacity-50 pointer-events-none': finalWinner && finalWinner !== player,
+                }" @click="selectFinalWinner(player)">
+                {{ player || '--' }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lado Direito (reverso) -->
+        <div class="flex flex-row-reverse">
+          <div v-for="(round, rIndex) in rightRounds" :key="'right-' + rIndex"
+            class="flex flex-col items-center mx-1 sm:mx-2"
+            :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }">
+            <div v-for="(match, mIndex) in getMatches(round)" :key="'right-match-' + mIndex"
+              class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-40 sm:w-48 mt-auto mb-auto">
+              <div v-for="(player, pIndex) in match" :key="pIndex"
+                class="w-full h-10 sm:h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-xs sm:text-sm text-center"
+                :class="{
+                  'bg-green-700': isWinner('right', rIndex, mIndex, pIndex),
+                  'opacity-50 pointer-events-none': opponentWon('right', rIndex, mIndex, pIndex),
+                }" @click="handleClick('right', rIndex, mIndex, pIndex)">
+                {{ player || '--' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pódio -->
+    <div v-if="showPodium" class="mt-8 w-full max-w-md px-2 sm:px-0">
+      <h2 class="text-xl font-bold text-white mb-4 text-center">Pódio</h2>
+      <table class="w-full text-white border border-white rounded-lg text-sm sm:text-base">
+        <thead>
+          <tr>
+            <th class="border-b border-white p-2">Posição</th>
+            <th class="border-b border-white p-2">Competidor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border-b border-white p-2">1º</td>
+            <td class="border-b border-white p-2">{{ finalWinner }}</td>
+          </tr>
+          <tr>
+            <td class="border-b border-white p-2">2º</td>
+            <td class="border-b border-white p-2">{{ secondPlace }}</td>
+          </tr>
+          <tr v-for="(third, index) in thirdPlaces" :key="index">
+            <td class="border-b border-white p-2">3º</td>
+            <td class="border-b border-white p-2">{{ third }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
 
 <style scoped>
 ::-webkit-scrollbar {
