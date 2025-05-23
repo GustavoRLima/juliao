@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CompeticoesController;
+use App\Http\Controllers\CompetidoresController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/competicao-tabela', [CompeticoesController::class, 'competicaoTabela'])->name('competicao.tabela');
+    
+    Route::resource('/competidores', CompetidoresController::class)->names('competidores');
 });
 
 require __DIR__.'/auth.php';

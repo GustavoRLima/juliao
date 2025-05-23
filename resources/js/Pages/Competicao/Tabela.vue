@@ -1,16 +1,3 @@
-<!-- src/App.vue -->
-<template>
-    <Head title="Tabela Competição" />
-
-    <AuthenticatedLayout>
-        <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                Tabela competição 
-            </h2>
-        </template>
-        <Chaveamento :competitors="competitors" />
-    </AuthenticatedLayout>
-</template>
 
 <script setup lang="ts">
 import Chaveamento from '@/Pages/Competicao/Chaveamento.vue';
@@ -35,3 +22,16 @@ const competitors = [
   'Competidor 15',
 ]
 </script>
+
+<template>
+    <Head title="Tabela Competição" />
+
+    <AuthenticatedLayout>
+        <template #header>
+            <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                Tabela competição 
+            </h2>
+        </template>
+        <Chaveamento :competitors="competitors" />
+    </AuthenticatedLayout>
+</template>

@@ -33,7 +33,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::MbNpI593SV10Fox5',
+            '_route' => 'generated::I5Pdf0poVl7zY5iq',
           ),
           1 => NULL,
           2 => 
@@ -53,7 +53,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::ge3zuAiLoxddnF0j',
+            '_route' => 'generated::CCkXGhkXQFWBfih1',
           ),
           1 => NULL,
           2 => 
@@ -159,6 +159,62 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
+      '/competidores' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competidores.index',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competidores.store',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'POST' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/competidores/create' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competidores.create',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
       '/register' => 
       array (
         0 => 
@@ -182,7 +238,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::RtZpqEtR9APcqquL',
+            '_route' => 'generated::A8N9ma837D1fHxA5',
           ),
           1 => NULL,
           2 => 
@@ -218,7 +274,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::SbeeN0krEPUnbZnl',
+            '_route' => 'generated::A34cUSFofkxFGKuM',
           ),
           1 => NULL,
           2 => 
@@ -348,7 +404,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::tjAi8lbx5VWAR3cI',
+            '_route' => 'generated::VxBFgG1rLE7QKyxs',
           ),
           1 => NULL,
           2 => 
@@ -402,11 +458,99 @@ app('router')->setCompiledRoutes(
     ),
     2 => 
     array (
-      0 => '{^(?|/reset\\-password/([^/]++)(*:32)|/verify\\-email/([^/]++)/([^/]++)(*:71)|/storage/(.*)(*:91))/?$}sDu',
+      0 => '{^(?|/competidores/([^/]++)(?|(*:32)|/edit(*:44)|(*:51))|/reset\\-password/([^/]++)(*:84)|/verify\\-email/([^/]++)/([^/]++)(*:123)|/storage/(.*)(*:144))/?$}sDu',
     ),
     3 => 
     array (
       32 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competidores.show',
+          ),
+          1 => 
+          array (
+            0 => 'competidore',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+      ),
+      44 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competidores.edit',
+          ),
+          1 => 
+          array (
+            0 => 'competidore',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      51 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competidores.update',
+          ),
+          1 => 
+          array (
+            0 => 'competidore',
+          ),
+          2 => 
+          array (
+            'PUT' => 0,
+            'PATCH' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competidores.destroy',
+          ),
+          1 => 
+          array (
+            0 => 'competidore',
+          ),
+          2 => 
+          array (
+            'DELETE' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+      ),
+      84 => 
       array (
         0 => 
         array (
@@ -429,7 +573,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      71 => 
+      123 => 
       array (
         0 => 
         array (
@@ -453,7 +597,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      91 => 
+      144 => 
       array (
         0 => 
         array (
@@ -528,7 +672,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::MbNpI593SV10Fox5' => 
+    'generated::I5Pdf0poVl7zY5iq' => 
     array (
       'methods' => 
       array (
@@ -557,7 +701,7 @@ app('router')->setCompiledRoutes(
                         \'exception\' => $exception,
                     ]), status: $exception ? 500 : 200);
                 }";s:5:"scope";s:54:"Illuminate\\Foundation\\Configuration\\ApplicationBuilder";s:4:"this";N;s:4:"self";s:32:"00000000000005170000000000000000";}}',
-        'as' => 'generated::MbNpI593SV10Fox5',
+        'as' => 'generated::I5Pdf0poVl7zY5iq',
       ),
       'fallback' => false,
       'defaults' => 
@@ -573,7 +717,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::ge3zuAiLoxddnF0j' => 
+    'generated::CCkXGhkXQFWBfih1' => 
     array (
       'methods' => 
       array (
@@ -600,7 +744,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::ge3zuAiLoxddnF0j',
+        'as' => 'generated::CCkXGhkXQFWBfih1',
       ),
       'fallback' => false,
       'defaults' => 
@@ -806,6 +950,270 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
+    'competidores.index' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'competidores',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competidores.index',
+        'uses' => 'App\\Http\\Controllers\\CompetidoresController@index',
+        'controller' => 'App\\Http\\Controllers\\CompetidoresController@index',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competidores.create' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'competidores/create',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competidores.create',
+        'uses' => 'App\\Http\\Controllers\\CompetidoresController@create',
+        'controller' => 'App\\Http\\Controllers\\CompetidoresController@create',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competidores.store' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'POST',
+      ),
+      'uri' => 'competidores',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competidores.store',
+        'uses' => 'App\\Http\\Controllers\\CompetidoresController@store',
+        'controller' => 'App\\Http\\Controllers\\CompetidoresController@store',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competidores.show' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'competidores/{competidore}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competidores.show',
+        'uses' => 'App\\Http\\Controllers\\CompetidoresController@show',
+        'controller' => 'App\\Http\\Controllers\\CompetidoresController@show',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competidores.edit' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'competidores/{competidore}/edit',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competidores.edit',
+        'uses' => 'App\\Http\\Controllers\\CompetidoresController@edit',
+        'controller' => 'App\\Http\\Controllers\\CompetidoresController@edit',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competidores.update' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'PUT',
+        1 => 'PATCH',
+      ),
+      'uri' => 'competidores/{competidore}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competidores.update',
+        'uses' => 'App\\Http\\Controllers\\CompetidoresController@update',
+        'controller' => 'App\\Http\\Controllers\\CompetidoresController@update',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competidores.destroy' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'DELETE',
+      ),
+      'uri' => 'competidores/{competidore}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competidores.destroy',
+        'uses' => 'App\\Http\\Controllers\\CompetidoresController@destroy',
+        'controller' => 'App\\Http\\Controllers\\CompetidoresController@destroy',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
     'register' => 
     array (
       'methods' => 
@@ -844,7 +1252,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::RtZpqEtR9APcqquL' => 
+    'generated::A8N9ma837D1fHxA5' => 
     array (
       'methods' => 
       array (
@@ -865,7 +1273,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::RtZpqEtR9APcqquL',
+        'as' => 'generated::A8N9ma837D1fHxA5',
       ),
       'fallback' => false,
       'defaults' => 
@@ -919,7 +1327,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::SbeeN0krEPUnbZnl' => 
+    'generated::A34cUSFofkxFGKuM' => 
     array (
       'methods' => 
       array (
@@ -940,7 +1348,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::SbeeN0krEPUnbZnl',
+        'as' => 'generated::A34cUSFofkxFGKuM',
       ),
       'fallback' => false,
       'defaults' => 
@@ -1260,7 +1668,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::tjAi8lbx5VWAR3cI' => 
+    'generated::VxBFgG1rLE7QKyxs' => 
     array (
       'methods' => 
       array (
@@ -1281,7 +1689,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::tjAi8lbx5VWAR3cI',
+        'as' => 'generated::VxBFgG1rLE7QKyxs',
       ),
       'fallback' => false,
       'defaults' => 

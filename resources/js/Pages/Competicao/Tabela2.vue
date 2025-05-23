@@ -1,139 +1,165 @@
-<script lang="ts" setup>
-import { ref, onMounted } from 'vue';
-import Draggable from 'vuedraggable';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-
-interface Competitor {
-    id: number
-    name: string
-}
-
-type Match = Competitor[]
-type Round = Match[]
-
-const competitors = ref<Competitor[]>([
-    { id: 1, name: 'João' },
-    { id: 2, name: 'Maria' },
-    { id: 3, name: 'Carlos' },
-    { id: 4, name: 'Ana' },
-    { id: 5, name: 'José' },
-    { id: 6, name: 'Fernanda' },
-    { id: 7, name: 'Lucas' },
-    { id: 8, name: 'Beatriz' },
-])
-
-const rounds = ref<Round[]>([])
-
-function generateInitialRounds(): void {
-    const firstRound: Match[] = []
-
-    for (let i = 0; i < competitors.value.length; i += 2) {
-        firstRound.push([competitors.value[i], competitors.value[i + 1]])
-    }
-
-    rounds.value = [firstRound]
-}
-
-function onAdd(event: any, nextRoundIndex: number, matchIndex: number): void {
-    const player: Competitor = event.item?._underlying_vm_ || event.clone
-
-    if (!player || !player.name) return
-
-    const confirmed = window.confirm(
-        `Deseja avançar ${player.name} para a próxima etapa?`
-    )
-
-    if (!confirmed) {
-        // Corrigido: Acessar o match correto da rodada atual
-        const currentRoundIndex = nextRoundIndex - 1
-        const currentMatch = rounds.value[currentRoundIndex]?.[matchIndex]
-
-        if (currentMatch) {
-            const idx = currentMatch.findIndex((c) => c.id === player.id)
-            if (idx !== -1) currentMatch.splice(idx, 1)
-        }
-
-        return
-    }
-
-    // Cria a próxima rodada se ainda não existe
-    if (!rounds.value[nextRoundIndex]) {
-        rounds.value[nextRoundIndex] = []
-    }
-
-    const targetMatchIndex = Math.floor(matchIndex / 2)
-
-    if (!rounds.value[nextRoundIndex][targetMatchIndex]) {
-        rounds.value[nextRoundIndex][targetMatchIndex] = []
-    }
-
-    const targetMatch = rounds.value[nextRoundIndex][targetMatchIndex]
-
-    const alreadyExists = targetMatch.some((c) => c.id === player.id)
-    if (!alreadyExists) {
-        targetMatch.push(player)
-    }
-}
-
-
-
-onMounted(() => {
-    generateInitialRounds()
-})
-</script>
-
 <template>
+  <div class="flex flex-col items-center bg-gray-900 min-h-screen p-6">
+    <h1 class="text-2xl font-bold mb-6 text-white">Chave de Competição</h1>
 
-    <Head title="Tabela Competição" />
-
-    <AuthenticatedLayout>
-        <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                Tabela competição 23
-            </h2>
-        </template>
-
-        <div class="flex space-x-6 overflow-x-auto p-4">
-            <div v-for="(round, roundIndex) in rounds" :key="roundIndex" class="flex flex-col gap-4">
-                <div class="text-center text-white font-bold text-lg">Rodada {{ roundIndex + 1 }}</div>
-
-                <div v-for="(match, matchIndex) in round" :key="matchIndex"
-                    class="bg-gray-100 rounded-xl p-4 min-w-[180px] shadow-md">
-                    <Draggable :list="match" group="competitors" item-key="id" class="space-y-2"
-                        @add="onAdd($event, roundIndex + 1, matchIndex)">
-                        <template #item="{ element }">
-                            <div
-                                class="bg-white p-2 rounded shadow border text-center cursor-pointer hover:bg-blue-100 transition">
-                                {{ element.name }}
-                            </div>
-                        </template>
-                    </Draggable>
-                </div>
+    <div class="flex overflow-x-auto">
+      <!-- Lado Esquerdo -->
+      <div class="flex">
+        <div
+          v-for="(round, rIndex) in leftRounds"
+          :key="'left-' + rIndex"
+          class="flex flex-col items-center mx-2"
+          :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }"
+        >
+          <div
+            v-for="(match, mIndex) in getMatches(round)"
+            :key="'left-match-' + mIndex"
+            class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-48"
+          >
+            <div
+              v-for="(player, pIndex) in match"
+              :key="pIndex"
+              class="w-full h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-sm"
+              :class="{
+                'bg-green-700': isWinner('left', rIndex, mIndex, pIndex),
+                'opacity-50 pointer-events-none': opponentWon('left', rIndex, mIndex, pIndex),
+              }"
+              @click="handleClick('left', rIndex, mIndex, pIndex)"
+            >
+              {{ player || '--' }}
             </div>
+          </div>
         </div>
-    </AuthenticatedLayout>
+      </div>
+
+      <!-- Final -->
+      <div class="flex flex-col justify-center mx-4">
+        <div class="w-32 h-16 border border-yellow-500 rounded-lg p-2 mb-4 flex items-center justify-center text-center font-semibold text-yellow-500">
+          FINAL
+        </div>
+      </div>
+
+      <!-- Lado Direito -->
+      <div class="flex">
+        <div
+          v-for="(round, rIndex) in rightRounds"
+          :key="'right-' + rIndex"
+          class="flex flex-col items-center mx-2"
+          :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }"
+        >
+          <div
+            v-for="(match, mIndex) in getMatches(round)"
+            :key="'right-match-' + mIndex"
+            class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-48"
+          >
+            <div
+              v-for="(player, pIndex) in match"
+              :key="pIndex"
+              class="w-full h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-sm"
+              :class="{
+                'bg-green-700': isWinner('right', rIndex, mIndex, pIndex),
+                'opacity-50 pointer-events-none': opponentWon('right', rIndex, mIndex, pIndex),
+              }"
+              @click="handleClick('right', rIndex, mIndex, pIndex)"
+            >
+              {{ player || '--' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<style scoped>
-.bracket {
-  display: flex;
-  gap: 20px;
+<script setup lang="ts">
+import { reactive, computed } from 'vue'
+
+interface Props {
+  competitors: string[]
 }
-.round {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+
+const props = defineProps<Props>()
+
+function getNextPowerOfTwo(n: number): number {
+  return Math.pow(2, Math.ceil(Math.log2(n)))
 }
-.match {
-  background: #eee;
-  padding: 10px;
-  border-radius: 8px;
+
+function generateRounds(players: (string | null)[]) {
+  const rounds: (string | null)[][] = []
+  let current = players
+  while (current.length > 1) {
+    rounds.push([...current])
+    current = Array(Math.ceil(current.length / 2)).fill(null)
+  }
+  rounds.push([null]) // final
+  return rounds
 }
-.competitor {
-  background: #fff;
-  padding: 5px;
-  margin-bottom: 5px;
-  border: 1px solid #ccc;
+
+const leftState = reactive({ rounds: [] as (string | null)[][] })
+const rightState = reactive({ rounds: [] as (string | null)[][] })
+
+function initRounds() {
+  const half = Math.ceil(props.competitors.length / 2)
+  const left = [...props.competitors.slice(0, half)]
+  const right = [...props.competitors.slice(half)]
+
+  const leftFilled = [...left, ...Array(getNextPowerOfTwo(half) - left.length).fill(null)]
+  const rightFilled = [...right, ...Array(getNextPowerOfTwo(right.length) - right.length).fill(null)]
+
+  leftState.rounds = generateRounds(leftFilled)
+  rightState.rounds = generateRounds(rightFilled)
 }
-</style>
+
+// Agrupa jogadores em duplas (matches)
+function getMatches(round: (string | null)[]) {
+  const matches = []
+  for (let i = 0; i < round.length; i += 2) {
+    matches.push([round[i], round[i + 1]])
+  }
+  return matches
+}
+
+// Verifica se esse jogador já venceu
+function isWinner(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number) {
+  const currentSide = side === 'left' ? leftState : rightState
+  const nextRound = roundIndex + 1
+  const winner = currentSide.rounds[nextRound]?.[matchIndex]
+  return winner && winner === currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
+}
+
+// Verifica se o oponente já venceu
+function opponentWon(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number) {
+  const currentSide = side === 'left' ? leftState : rightState
+  const nextRound = roundIndex + 1
+  const thisPlayer = currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
+  const otherIndex = playerIndex === 0 ? 1 : 0
+  const opponent = currentSide.rounds[roundIndex][matchIndex * 2 + otherIndex]
+  const winner = currentSide.rounds[nextRound]?.[matchIndex]
+  return winner && winner === opponent
+}
+
+// Lógica de clique com confirmação e reversão
+function handleClick(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number) {
+  const currentSide = side === 'left' ? leftState : rightState
+  const currentPlayer = currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
+  const nextRound = roundIndex + 1
+
+  if (!currentPlayer) return
+
+  const winner = currentSide.rounds[nextRound]?.[matchIndex]
+  if (winner === currentPlayer) {
+    if (confirm(`Deseja remover a vitória de ${currentPlayer}?`)) {
+      currentSide.rounds[nextRound][matchIndex] = null
+    }
+  } else if (!winner) {
+    if (confirm(`Deseja declarar ${currentPlayer} como vencedor?`)) {
+      currentSide.rounds[nextRound][matchIndex] = currentPlayer
+    }
+  }
+}
+
+initRounds()
+
+const leftRounds = computed(() => leftState.rounds.slice(0, -1))
+const rightRounds = computed(() => rightState.rounds.slice(0, -1).reverse())
+</script>

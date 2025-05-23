@@ -40,6 +40,12 @@ const showingNavigationDropdown = ref(false);
                                     Dashboard
                                 </NavLink>
                                 <NavLink
+                                :href="route('competidores.index')"
+                                    :active="route().current('competidores.*')"
+                                >
+                                    Competidores
+                                </NavLink>
+                                <NavLink
                                 :href="route('competicao.tabela')"
                                     :active="route().current('competicao.tabela')"
                                 >
