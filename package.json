@@ -23,6 +23,7 @@
         "vue-tsc": "^2.0.24"
     },
     "dependencies": {
+        "pinia": "^3.0.2",
         "sweetalert2": "^11.21.0",
         "vuedraggable": "^4.1.0"
     }

@@ -6,8 +6,10 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import { useLoadingStore } from '@/stores/loading'
 
 const showingNavigationDropdown = ref(false);
+const loadingStore = useLoadingStore()
 </script>
 
 <template>
@@ -206,5 +208,12 @@ const showingNavigationDropdown = ref(false);
                 <slot />
             </main>
         </div>
+        <div
+            v-if="loadingStore.isLoading"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        >
+            <div class="text-white text-xl">Carregando...</div>
+        </div>
     </div>
+
 </template>

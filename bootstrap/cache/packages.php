@@ -6,6 +6,34 @@
       0 => 'Inertia\\ServiceProvider',
     ),
   ),
+  'laravel-lang/config' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'LaravelLang\\Config\\ServiceProvider',
+    ),
+  ),
+  'laravel-lang/lang' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'LaravelLang\\Lang\\ServiceProvider',
+    ),
+  ),
+  'laravel-lang/locales' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'LaravelLang\\Locales\\ServiceProvider',
+    ),
+  ),
+  'laravel-lang/publisher' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'LaravelLang\\Publisher\\ServiceProvider',
+    ),
+  ),
   'laravel/breeze' => 
   array (
     'providers' => 
@@ -39,6 +67,13 @@
     'providers' => 
     array (
       0 => 'Laravel\\Tinker\\TinkerServiceProvider',
+    ),
+  ),
+  'lucascudo/laravel-pt-br-localization' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Lucascudo\\LaravelPtBrLocalization\\LaravelPtBrLocalizationServiceProvider',
     ),
   ),
   'nesbot/carbon' => 
