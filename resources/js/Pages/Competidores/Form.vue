@@ -3,16 +3,25 @@
 import FormInput from '@/Components/FormInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { watch } from 'vue';
+import { onMounted, watch } from 'vue';
 import { submitForm, submitFormPut } from '@/config/usaForm';
 import FormButton from '@/Components/FormButton.vue';
+import FormSelect from '@/Components/FormSelect.vue';
+import NavLink from '@/Components/NavLink.vue';
 
 const props = defineProps<{
-    competidor: Competidores
+    competidor: Competidores,
+    OptionsSexo: Array<SelectInterface>,
+    OptionsFaixas: Array<SelectInterface>,
 }>();
+
+onMounted(() => {
+    console.log(props);
+})
 
 const form = useForm({
     nome: props.competidor?.nome ?? '',
+    sexo: props.competidor?.sexo ?? '',
     data_nascimento: props.competidor?.data_nascimento ?? '',
     idade: props.competidor?.idade ?? '',
     peso: props.competidor?.peso ?? '',
@@ -46,6 +55,18 @@ async function formSubmit()
     }
 }
 
+watch(() => form.idade, (newValue) => {
+    if([4,5].includes(newValue)) form.categoria = 'PRÉ-MIRIM';
+    if([6,7].includes(newValue)) form.categoria = 'MIRIM 1';
+    if([8,9].includes(newValue)) form.categoria = 'MIRIM 2';
+    if([10,11].includes(newValue)) form.categoria = 'INFANTIL 1';
+    if([12,13].includes(newValue)) form.categoria = 'INFANTIL 2';
+    if([14,15].includes(newValue)) form.categoria = 'INFANTO-JUVENIL';
+    if([16,17].includes(newValue)) form.categoria = 'JUVENIL';
+    if(newValue >= 18 && newValue <= 29) form.categoria = 'ADULTOS';
+    if(newValue >= 30) form.categoria = 'MASTERS';
+})
+
 </script>
 
 <template>
@@ -70,12 +91,23 @@ async function formSubmit()
                 >
                 </FormInput>
                 
+                <FormSelect
+                    label="Sexo"
+                    id="sexo"
+                    name="sexo"
+                    :options="props.OptionsSexo"
+                    v-model="form.sexo"
+                    :required="true"
+                >
+                </FormSelect>
+
                 <FormInput
                     type="date"
                     label="Data de nascimento"
                     id="data_nascimento"
                     name="data_nascimento"
                     v-model="form.data_nascimento"
+                    :required="true"
                 >
                 </FormInput>
                 
@@ -88,15 +120,56 @@ async function formSubmit()
                     readonly
                 >
                 </FormInput>
+                
+                <FormInput
+                    type="number"
+                    step="0.01"
+                    label="Peso"
+                    id="peso"
+                    name="peso"
+                    v-model="form.peso"
+                    :required="true"
+                >
+                </FormInput>
+                
+                <FormSelect
+                    label="Faixa"
+                    id="faixa"
+                    name="faixa"
+                    :options="props.OptionsFaixas"
+                    v-model="form.faixa"
+                    :required="true"
+                >
+                </FormSelect>
+                
+                <FormInput
+                    type="text"
+                    label="Categoria"
+                    id="categoria"
+                    name="categoria"
+                    v-model="form.categoria"
+                    :required="true"
+                    readonly
+                >
+                </FormInput>
 
                 <div class="flex justify-end">
-                    <FormButton
-                        type="submit"
-                        class="ml-auto mt-2 inline-flex items-center rounded-md border border-transparent bg-green-300 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-green-300 focus:bg-green-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-stone-950 dark:bg-green-300 dark:text-stone-950 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-green-300 dark:active:bg-green-300"
-                        :disabled="form.processing"
-                    >
-                        Salvar
-                    </FormButton>
+                    <div class="ml-auto mt-2 inline-flex">
+                        <NavLink
+                            :href="route('competidores.index')"
+                            class="mr-1 items-center rounded-md border border-transparent bg-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-300 focus:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-stone-950 dark:bg-gray-300 dark:text-stone-950 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-gray-300 dark:active:bg-gray-300"
+                            :button="true"
+                        >
+                            Voltar
+                        </NavLink>
+                        <FormButton
+                            type="submit"
+                            class="mr-1 items-center rounded-md border border-transparent bg-green-300 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-green-300 focus:bg-green-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-stone-950 dark:bg-green-300 dark:text-stone-950 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-green-300 dark:active:bg-green-300"
+                            :disabled="form.processing"
+                        >
+                            Salvar
+                        </FormButton>
+                    </div>
                 </div>
             </form>
         </div>

@@ -14,10 +14,12 @@ class CompetidorModel extends Model
 
     protected $fillable = [
         'nome',
+        'sexo',
         'data_nascimento',
         'idade',
         'faixa',
         'peso',
+        'categoria_filter',
         'categoria'
     ];
 }

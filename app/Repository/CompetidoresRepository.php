@@ -14,7 +14,7 @@ class CompetidoresRepository extends BaseRepository
 
     public function getCompetidores($dados)
     {
-        return $this->query->select('id', 'nome', 'faixa')
+        return $this->query->select('id', 'nome', 'faixa', 'idade', 'peso')
             ->when(isset($dados['nome']), function($q) use($dados){
                 $q->where(function($q) use($dados){
                     $q->where('id', $dados['nome'])

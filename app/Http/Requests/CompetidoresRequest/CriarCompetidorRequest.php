@@ -27,6 +27,8 @@ class CriarCompetidorRequest extends FormRequest
             'idade' => ['required'],
             'peso' => ['required'],
             'faixa' => ['required'],
+            'sexo' => ['required'],
+            'categoria' => ['required'],
         ];
     }
 }

@@ -27,7 +27,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/competicao-tabela', [CompeticoesController::class, 'competicaoTabela'])->name('competicao.tabela');
     
-    Route::resource('/competidores', CompetidoresController::class)->names('competidores');
+    Route::resource('/competidores', CompetidoresController::class)->names('competidores')->parameters([
+        'competidores' => 'competidor'
+    ]);
 });
 
 require __DIR__.'/auth.php';
