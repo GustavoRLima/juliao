@@ -7,6 +7,24 @@ const page = usePage<PageProps>()
 
 const formUse = useForm({});
 
+export async function searchForm(form: any, route: string) {
+    const loading = useLoadingStore();
+    loading.start();
+    const response = await form.get(route, {
+        preserveScroll: true,
+        onSuccess: () => {
+            loading.stop();
+        },
+        onError: (errors: any) => {
+            console.log('Erros de validação:', errors.detalhes);
+            console.log(errors);
+            loading.stop();
+        }
+    });
+        
+    return response;
+}
+
 export async function submitForm(form: any, route: string) {
     const loading = useLoadingStore();
     loading.start();
@@ -86,8 +104,8 @@ export async function onDeleteItem(route: any, message: string = "Tem certeza qu
         cancelButtonText: 'Cancelar'
     });
 
-    loading.start();
     if(!swalReturn.isConfirmed) return;
+    loading.start();
 
     const urlParams = new URLSearchParams(window.location.search);
     if(urlParams){

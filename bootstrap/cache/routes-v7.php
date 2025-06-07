@@ -33,7 +33,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::vFnFWkU0H5wOYKuk',
+            '_route' => 'generated::j6DgPtTUI8XRx04k',
           ),
           1 => NULL,
           2 => 
@@ -53,7 +53,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::g22iJWd7ZJslKXJG',
+            '_route' => 'generated::xfYiLhNX0qULGaWJ',
           ),
           1 => NULL,
           2 => 
@@ -139,26 +139,6 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/competicao-tabela' => 
-      array (
-        0 => 
-        array (
-          0 => 
-          array (
-            '_route' => 'competicao.tabela',
-          ),
-          1 => NULL,
-          2 => 
-          array (
-            'GET' => 0,
-            'HEAD' => 1,
-          ),
-          3 => NULL,
-          4 => false,
-          5 => false,
-          6 => NULL,
-        ),
-      ),
       '/competidores' => 
       array (
         0 => 
@@ -215,6 +195,82 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
+      '/competicoes' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competicoes.index',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competicoes.store',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'POST' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/competicoes/create' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competicoes.create',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/competicao-tabela' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competicao.tabela',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
       '/register' => 
       array (
         0 => 
@@ -238,7 +294,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::vkJ30s2fBb0z6wqM',
+            '_route' => 'generated::P9tm4YMf2SdQf50x',
           ),
           1 => NULL,
           2 => 
@@ -274,7 +330,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::BU45hMAiD6RpFcUU',
+            '_route' => 'generated::Tl2Vx5g82qewiBF4',
           ),
           1 => NULL,
           2 => 
@@ -404,7 +460,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::60y2adubk9tKUjIy',
+            '_route' => 'generated::CrbHMHHcaplH70nY',
           ),
           1 => NULL,
           2 => 
@@ -458,11 +514,11 @@ app('router')->setCompiledRoutes(
     ),
     2 => 
     array (
-      0 => '{^(?|/competidores/([^/]++)(?|(*:32)|/edit(*:44)|(*:51))|/reset\\-password/([^/]++)(*:84)|/verify\\-email/([^/]++)/([^/]++)(*:123)|/storage/(.*)(*:144))/?$}sDu',
+      0 => '{^(?|/competi(?|dores/([^/]++)(?|(*:35)|/edit(*:47)|(*:54))|coes/([^/]++)(?|(*:78)|/edit(*:90)|(*:97)))|/reset\\-password/([^/]++)(*:131)|/verify\\-email/([^/]++)/([^/]++)(*:171)|/storage/(.*)(*:192))/?$}sDu',
     ),
     3 => 
     array (
-      32 => 
+      35 => 
       array (
         0 => 
         array (
@@ -485,7 +541,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      44 => 
+      47 => 
       array (
         0 => 
         array (
@@ -508,7 +564,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      51 => 
+      54 => 
       array (
         0 => 
         array (
@@ -550,7 +606,95 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      84 => 
+      78 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competicoes.show',
+          ),
+          1 => 
+          array (
+            0 => 'competicao',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+      ),
+      90 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competicoes.edit',
+          ),
+          1 => 
+          array (
+            0 => 'competicao',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      97 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competicoes.update',
+          ),
+          1 => 
+          array (
+            0 => 'competicao',
+          ),
+          2 => 
+          array (
+            'PUT' => 0,
+            'PATCH' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competicoes.destroy',
+          ),
+          1 => 
+          array (
+            0 => 'competicao',
+          ),
+          2 => 
+          array (
+            'DELETE' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+      ),
+      131 => 
       array (
         0 => 
         array (
@@ -573,7 +717,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      123 => 
+      171 => 
       array (
         0 => 
         array (
@@ -597,7 +741,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      144 => 
+      192 => 
       array (
         0 => 
         array (
@@ -672,7 +816,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::vFnFWkU0H5wOYKuk' => 
+    'generated::j6DgPtTUI8XRx04k' => 
     array (
       'methods' => 
       array (
@@ -701,7 +845,7 @@ app('router')->setCompiledRoutes(
                         \'exception\' => $exception,
                     ]), status: $exception ? 500 : 200);
                 }";s:5:"scope";s:54:"Illuminate\\Foundation\\Configuration\\ApplicationBuilder";s:4:"this";N;s:4:"self";s:32:"00000000000005e40000000000000000";}}',
-        'as' => 'generated::vFnFWkU0H5wOYKuk',
+        'as' => 'generated::j6DgPtTUI8XRx04k',
       ),
       'fallback' => false,
       'defaults' => 
@@ -717,7 +861,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::g22iJWd7ZJslKXJG' => 
+    'generated::xfYiLhNX0qULGaWJ' => 
     array (
       'methods' => 
       array (
@@ -744,7 +888,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::g22iJWd7ZJslKXJG',
+        'as' => 'generated::xfYiLhNX0qULGaWJ',
       ),
       'fallback' => false,
       'defaults' => 
@@ -897,44 +1041,6 @@ app('router')->setCompiledRoutes(
         array (
         ),
         'as' => 'profile.destroy',
-      ),
-      'fallback' => false,
-      'defaults' => 
-      array (
-      ),
-      'wheres' => 
-      array (
-      ),
-      'bindingFields' => 
-      array (
-      ),
-      'lockSeconds' => NULL,
-      'waitSeconds' => NULL,
-      'withTrashed' => false,
-    ),
-    'competicao.tabela' => 
-    array (
-      'methods' => 
-      array (
-        0 => 'GET',
-        1 => 'HEAD',
-      ),
-      'uri' => 'competicao-tabela',
-      'action' => 
-      array (
-        'middleware' => 
-        array (
-          0 => 'web',
-          1 => 'auth',
-        ),
-        'uses' => 'App\\Http\\Controllers\\CompeticoesController@competicaoTabela',
-        'controller' => 'App\\Http\\Controllers\\CompeticoesController@competicaoTabela',
-        'namespace' => NULL,
-        'prefix' => '',
-        'where' => 
-        array (
-        ),
-        'as' => 'competicao.tabela',
       ),
       'fallback' => false,
       'defaults' => 
@@ -1214,6 +1320,308 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
+    'competicoes.index' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'competicoes',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competicoes.index',
+        'uses' => 'App\\Http\\Controllers\\CompeticoesController@index',
+        'controller' => 'App\\Http\\Controllers\\CompeticoesController@index',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competicoes.create' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'competicoes/create',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competicoes.create',
+        'uses' => 'App\\Http\\Controllers\\CompeticoesController@create',
+        'controller' => 'App\\Http\\Controllers\\CompeticoesController@create',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competicoes.store' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'POST',
+      ),
+      'uri' => 'competicoes',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competicoes.store',
+        'uses' => 'App\\Http\\Controllers\\CompeticoesController@store',
+        'controller' => 'App\\Http\\Controllers\\CompeticoesController@store',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competicoes.show' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'competicoes/{competicao}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competicoes.show',
+        'uses' => 'App\\Http\\Controllers\\CompeticoesController@show',
+        'controller' => 'App\\Http\\Controllers\\CompeticoesController@show',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competicoes.edit' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'competicoes/{competicao}/edit',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competicoes.edit',
+        'uses' => 'App\\Http\\Controllers\\CompeticoesController@edit',
+        'controller' => 'App\\Http\\Controllers\\CompeticoesController@edit',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competicoes.update' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'PUT',
+        1 => 'PATCH',
+      ),
+      'uri' => 'competicoes/{competicao}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competicoes.update',
+        'uses' => 'App\\Http\\Controllers\\CompeticoesController@update',
+        'controller' => 'App\\Http\\Controllers\\CompeticoesController@update',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competicoes.destroy' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'DELETE',
+      ),
+      'uri' => 'competicoes/{competicao}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'as' => 'competicoes.destroy',
+        'uses' => 'App\\Http\\Controllers\\CompeticoesController@destroy',
+        'controller' => 'App\\Http\\Controllers\\CompeticoesController@destroy',
+        'namespace' => NULL,
+        'prefix' => '/',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competicao.tabela' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'competicao-tabela',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'uses' => 'App\\Http\\Controllers\\CompeticoesController@competicaoTabela',
+        'controller' => 'App\\Http\\Controllers\\CompeticoesController@competicaoTabela',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'competicao.tabela',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
     'register' => 
     array (
       'methods' => 
@@ -1252,7 +1660,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::vkJ30s2fBb0z6wqM' => 
+    'generated::P9tm4YMf2SdQf50x' => 
     array (
       'methods' => 
       array (
@@ -1273,7 +1681,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::vkJ30s2fBb0z6wqM',
+        'as' => 'generated::P9tm4YMf2SdQf50x',
       ),
       'fallback' => false,
       'defaults' => 
@@ -1327,7 +1735,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::BU45hMAiD6RpFcUU' => 
+    'generated::Tl2Vx5g82qewiBF4' => 
     array (
       'methods' => 
       array (
@@ -1348,7 +1756,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::BU45hMAiD6RpFcUU',
+        'as' => 'generated::Tl2Vx5g82qewiBF4',
       ),
       'fallback' => false,
       'defaults' => 
@@ -1668,7 +2076,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::60y2adubk9tKUjIy' => 
+    'generated::CrbHMHHcaplH70nY' => 
     array (
       'methods' => 
       array (
@@ -1689,7 +2097,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::60y2adubk9tKUjIy',
+        'as' => 'generated::CrbHMHHcaplH70nY',
       ),
       'fallback' => false,
       'defaults' => 

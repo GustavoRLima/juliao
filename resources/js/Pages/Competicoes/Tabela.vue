@@ -1,6 +1,6 @@
 
 <script setup lang="ts">
-import Chaveamento from '@/Pages/Competicao/Chaveamento.vue';
+import Chaveamento from '@/Pages/Competicoes/Chaveamento.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 

@@ -48,10 +48,10 @@ const loadingStore = useLoadingStore()
                                     Competidores
                                 </NavLink>
                                 <NavLink
-                                :href="route('competicao.tabela')"
-                                    :active="route().current('competicao.tabela')"
+                                :href="route('competicoes.index')"
+                                    :active="route().current('competicoes.index')"
                                 >
-                                    Tabela
+                                    Competições
                                 </NavLink>
                             </div>
                         </div>

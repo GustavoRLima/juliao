@@ -24,12 +24,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::get('/competicao-tabela', [CompeticoesController::class, 'competicaoTabela'])->name('competicao.tabela');
     
     Route::resource('/competidores', CompetidoresController::class)->names('competidores')->parameters([
         'competidores' => 'competidor'
     ]);
+
+    Route::resource('/competicoes', CompeticoesController::class)->names('competicoes')->parameters([
+        'competicoes' => 'competicao'
+    ]);
+
+    Route::get('/competicao-tabela', [CompeticoesController::class, 'competicaoTabela'])->name('competicao.tabela');
 });
 
 require __DIR__.'/auth.php';

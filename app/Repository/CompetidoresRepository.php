@@ -15,11 +15,17 @@ class CompetidoresRepository extends BaseRepository
     public function getCompetidores($dados)
     {
         return $this->query->select('id', 'nome', 'faixa', 'idade', 'peso')
-            ->when(isset($dados['nome']), function($q) use($dados){
+            ->when(isset($dados['search']), function($q) use($dados){
                 $q->where(function($q) use($dados){
-                    $q->where('id', $dados['nome'])
-                    ->orWhere('nome', $dados['nome']);
+                    $q->where('id', $dados['search'])
+                    ->orWhere('nome', 'like', "{$dados['search']}%");
                 });
-            });
+            })
+            ->orderBy('nome', 'ASC');
+    }
+
+    public function getFaixas() 
+    {
+        return $this->model->getFaixas();
     }
 }

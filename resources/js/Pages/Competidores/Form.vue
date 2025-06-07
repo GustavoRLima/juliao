@@ -15,10 +15,6 @@ const props = defineProps<{
     OptionsFaixas: Array<SelectInterface>,
 }>();
 
-onMounted(() => {
-    console.log(props);
-})
-
 const form = useForm({
     nome: props.competidor?.nome ?? '',
     sexo: props.competidor?.sexo ?? '',

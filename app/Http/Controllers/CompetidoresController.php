@@ -20,9 +20,14 @@ class CompetidoresController extends Controller
     
     function index(Request $request)
     {
-        $competidores = $this->competidoresService->getCompetidores($request->input());
+        $dados = $request->input();
+        $competidores = $this->competidoresService->getCompetidores($dados);
+        $filtros = [
+            'search' => $dados['search'] ?? ''
+        ];
 
         return Inertia::render('Competidores/Index', [
+            'filtros' => $filtros,
             'competidores' => $competidores
         ]);
     }

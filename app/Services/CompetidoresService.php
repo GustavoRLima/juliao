@@ -55,17 +55,16 @@ class CompetidoresService
     
     public function getFaixas()
     {
-        return [
-            [ 'id' => "branca", 'name' => "Branca" ],
-            [ 'id' => 'amarela', 'name' => "Amarela"],
-            [ 'id' => 'laranja', 'name' => "Laranja"],
-            [ 'id' => 'verde', 'name' => "Verde"],
-            [ 'id' => 'azul', 'name' => "Azul"],
-            [ 'id' => 'roxa', 'name' => "Roxa"],
-            [ 'id' => 'marrom', 'name' => "Marrom"],
-            [ 'id' => 'preta', 'name' => "Preta"],
-            [ 'id' => 'coral_vermelha', 'name' => "Coral e vermelha"],
-        ];
+        $data = $this->competidoresRepository->getFaixas();
+        
+        foreach ($data as $key => $value) {
+            $retorno[] = [
+                'id' => $key,
+                'name' => $value
+            ];
+        }
+
+        return $retorno;
     }
 
     // public function getCategorias()
