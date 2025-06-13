@@ -24,4 +24,12 @@ class CompeticoesRepository extends BaseRepository
             })
             ->orderBy('data_evento', 'DESC');
     }
+
+    public function getCompetidores($competicao)
+    {
+        return $competicao->loadMissing(['competidores' => function($q) {
+            $q->select("nome", "id", "peso", "faixa", "categoria", "sexo")
+            ->withPivot('categoria_competicao');
+        }]);
+    }
 }

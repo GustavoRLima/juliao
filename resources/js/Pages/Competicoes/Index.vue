@@ -7,6 +7,10 @@ import NavLink from '@/Components/NavLink.vue';
 import FormButton from '@/Components/FormButton.vue';
 import { onDeleteItem, searchForm } from "@/config/usaForm.js";
 import FormInput from '@/Components/FormInput.vue';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faPersonCirclePlus } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faPersonCirclePlus);
 
 const props = defineProps<{
     competicoes: IPagination,
@@ -95,6 +99,13 @@ async function sendSearch()
                                 >
                                     <font-awesome-icon :icon="['fas', 'trash']" />
                                 </FormButton>
+                                <NavLink
+                                    :href="route('competicao.add-competidores', [competidor])"
+                                    class="mr-1 items-center rounded-md border border-transparent bg-gray-300 px-2 py-1 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-300 focus:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-stone-950 dark:bg-gray-300 dark:text-stone-950 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-gray-300 dark:active:bg-gray-300"
+                                    :button="true"
+                                >
+                                    <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
+                                </NavLink>
                             </td>
                         </tr>
                     </template>

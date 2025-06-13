@@ -1,0 +1,146 @@
+<?php
+
+namespace App\Support;
+
+use Illuminate\Database\Eloquent\Model;
+
+trait CategoriaSupport
+{
+
+    protected const categoria_competicao = [
+        'galo8924' => 'Galo Mirim 2',
+        'galo101132' => 'Galo Infantil 1',
+        'galo121336' => 'Galo Infantil 2',
+        'galo141544' => 'Galo Infanto-juvenil',
+        'galo161744f' => 'Galo Juvenil F',
+        'galo161753m' => 'Galo Juvenil M',
+        'galo1829f' => 'Galo Adultos F',
+        'galo1829m' => 'Galo Adultos M',
+        'galo30f' => 'Galo Masters F',
+        'galo30m' => 'Galo Masters M',
+
+        'pluma4517' => 'Pluma Pre-Mirim',
+        'pluma6721' => 'Pluma Mirim 1',
+        'pluma8924' => 'Pluma Mirim 2',
+        'pluma101132' => 'Pluma Infantil 1',
+        'pluma121336' => 'Pluma Infantil 2',
+        'pluma141544' => 'Pluma Infanto-juvenil',
+        'pluma161744f' => 'Pluma Juvenil F',
+        'pluma161753m' => 'Pluma Juvenil M',
+        'pluma1829f' => 'Pluma Adultos F',
+        'pluma1829m' => 'Pluma Adultos M',
+        'pluma30f' => 'Pluma Masters F',
+        'pluma30m' => 'Pluma Masters M',
+
+        'pena4517' => 'Pena Pre-Mirim',
+        'pena6721' => 'Pena Mirim 1',
+        'pena8924' => 'Pena Mirim 2',
+        'pena101132' => 'Pena Infantil 1',
+        'pena121336' => 'Pena Infantil 2',
+        'pena141544' => 'Pena Infanto-juvenil',
+        'pena161744f' => 'Pena Juvenil F',
+        'pena161753m' => 'Pena Juvenil M',
+        'pena1829f' => 'Pena Adultos F',
+        'pena1829m' => 'Pena Adultos M',
+        'pena30f' => 'Pena Masters F',
+        'pena30m' => 'Pena Masters M',
+
+        'leve4517' => 'Leve Pre-Mirim',
+        'leve6721' => 'Leve Mirim 1',
+        'leve8924' => 'Leve Mirim 2',
+        'leve101132' => 'Leve Infantil 1',
+        'leve121336' => 'Leve Infantil 2',
+        'leve141544' => 'Leve Infanto-juvenil',
+        'leve161744f' => 'Leve Juvenil F',
+        'leve161753m' => 'Leve Juvenil M',
+        'leve1829f' => 'Leve Adultos F',
+        'leve1829m' => 'Leve Adultos M',
+        'leve30f' => 'Leve Masters F',
+        'leve30m' => 'Leve Masters M',
+
+        'medio4517' => 'Medio Pre-Mirim',
+        'medio6721' => 'Medio Mirim 1',
+        'medio8924' => 'Medio Mirim 2',
+        'medio101132' => 'Medio Infantil 1',
+        'medio121336' => 'Medio Infantil 2',
+        'medio141544' => 'Medio Infanto-juvenil',
+        'medio161744f' => 'Medio Juvenil F',
+        'medio161753m' => 'Medio Juvenil M',
+        'medio1829f' => 'Medio Adultos F',
+        'medio1829m' => 'Medio Adultos M',
+        'medio30f' => 'Medio Masters F',
+        'medio30m' => 'Medio Masters M',
+
+        'mediopesado4517' => 'Medio Pesado Pre-Mirim',
+        'mediopesado6721' => 'Medio Pesado Mirim 1',
+        'mediopesado8924' => 'Medio Pesado Mirim 2',
+        'mediopesado101132' => 'Medio Pesado Infantil 1',
+        'mediopesado121336' => 'Medio Pesado Infantil 2',
+        'mediopesado141544' => 'Medio Pesado Infanto-juvenil',
+        'mediopesado161744f' => 'Medio Pesado Juvenil F',
+        'mediopesado161753m' => 'Medio Pesado Juvenil M',
+        'mediopesado1829f' => 'Medio Pesado Adultos F',
+        'mediopesado1829m' => 'Medio Pesado Adultos M',
+        'mediopesado30f' => 'Medio Pesado Masters F',
+        'mediopesado30m' => 'Medio Pesado Masters M',
+
+        'pesado4517' => 'Pesado Pre-Mirim',
+        'pesado6721' => 'Pesado Mirim 1',
+        'pesado8924' => 'Pesado Mirim 2',
+        'pesado101132' => 'Pesado Infantil 1',
+        'pesado121336' => 'Pesado Infantil 2',
+        'pesado141544' => 'Pesado Infanto-juvenil',
+        'pesado161744f' => 'Pesado Juvenil F',
+        'pesado161753m' => 'Pesado Juvenil M',
+        'pesado1829f' => 'Pesado Adultos F',
+        'pesado1829m' => 'Pesado Adultos M',
+        'pesado30f' => 'Pesado Masters F',
+        'pesado30m' => 'Pesado Masters M',
+
+        'superpesado4517' => 'Super Pesado Pre-Mirim',
+        'superpesado6721' => 'Super Pesado Mirim 1',
+        'superpesado8924' => 'Super Pesado Mirim 2',
+        'superpesado101132' => 'Super Pesado Infantil 1',
+        'superpesado121336' => 'Super Pesado Infantil 2',
+        'superpesado141544' => 'Super Pesado Infanto-juvenil',
+        'superpesado161744f' => 'Super Pesado Juvenil F',
+        'superpesado161753m' => 'Super Pesado Juvenil M',
+        'superpesado1829f' => 'Super Pesado Adultos F',
+        'superpesado1829m' => 'Super Pesado Adultos M',
+        'superpesado30f' => 'Super Pesado Masters F',
+        'superpesado30m' => 'Super Pesado Masters M',
+
+        'pessadissimo4517' => 'Pessadíssimo Pre-Mirim',
+        'pessadissimo6721' => 'Pessadíssimo Mirim 1',
+        'pessadissimo8924' => 'Pessadíssimo Mirim 2',
+        'pessadissimo101132' => 'Pessadíssimo Infantil 1',
+        'pessadissimo121336' => 'Pessadíssimo Infantil 2',
+        'pessadissimo141544' => 'Pessadíssimo Infanto-juvenil',
+        'pessadissimo161744f' => 'Pessadíssimo Juvenil F',
+        'pessadissimo161753m' => 'Pessadíssimo Juvenil M',
+        'pessadissimo1829f' => 'Pessadíssimo Adultos F',
+        'pessadissimo1829m' => 'Pessadíssimo Adultos M',
+        'pessadissimo30f' => 'Pessadíssimo Masters F',
+        'pessadissimo30m' => 'Pessadíssimo Masters M',
+
+        'superpessadissimo4517' => 'Super Pessadíssimo Pre-Mirim',
+        'superpessadissimo6721' => 'Super Pessadíssimo Mirim 1',
+        'superpessadissimo8924' => 'Super Pessadíssimo Mirim 2',
+        'superpessadissimo101132' => 'Super Pessadíssimo Infantil 1',
+        'superpessadissimo121336' => 'Super Pessadíssimo Infantil 2',
+        'superpessadissimo141544' => 'Super Pessadíssimo Infanto-juvenil',
+        'superpessadissimo161744f' => 'Super Pessadíssimo Juvenil F',
+        'superpessadissimo161753m' => 'Super Pessadíssimo Juvenil M',
+        'superpessadissimo1829f' => 'Super Pessadíssimo Adultos F',
+        'superpessadissimo1829m' => 'Super Pessadíssimo Adultos M',
+        'superpessadissimo30f' => 'Super Pessadíssimo Masters F',
+        'superpessadissimo30m' => 'Super Pessadíssimo Masters M',
+
+        'absoluto' => 'Absoluto'
+    ];
+
+    function getCategoriaCompeticao($categoria = null)
+    {
+        return !empty($categoria) ? self::categoria_competicao[$categoria] : self::categoria_competicao;
+    }
+}

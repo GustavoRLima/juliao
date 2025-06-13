@@ -28,17 +28,22 @@ class CompeticoesService
         return true;
     }
 
-    public function update(Request $request, $competidor)
+    public function update(Request $request, $competicao)
     {
         $dados = $request->validated();
-        $this->competicoesRepository->update($competidor, $dados);
+        $this->competicoesRepository->update($competicao, $dados);
         return true;
     }
 
-    public function excluir($competidor)
+    public function excluir($competicao)
     {
-        $this->competicoesRepository->excluir($competidor);
+        $this->competicoesRepository->excluir($competicao);
         return true;
     }
 
+    function getCompetidores($competicao)
+    {
+        $this->competicoesRepository->getCompetidores($competicao);
+        return $competicao->competidores;
+    }
 }

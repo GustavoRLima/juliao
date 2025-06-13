@@ -21,7 +21,6 @@ class CompetidorModel extends Model
         'idade',
         'faixa',
         'peso',
-        'categoria_filter',
         'categoria'
     ];
 

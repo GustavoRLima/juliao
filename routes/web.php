@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     ]);
 
     Route::get('/competicao-tabela', [CompeticoesController::class, 'competicaoTabela'])->name('competicao.tabela');
+    Route::get('/competicao-add-competidores/{competicao}', [CompeticoesController::class, 'addCompetidores'])->name('competicao.add-competidores');
 });
 
 require __DIR__.'/auth.php';

@@ -83,4 +83,12 @@ class CompeticoesController extends Controller
     {
         return Inertia::render('Competicoes/Tabela');
     }
+    
+    public function addCompetidores(CompeticaoModel $competicao)
+    {
+        $competidores = $this->competicoesService->getCompetidores($competicao);
+        return Inertia::render('Competicoes/AddCompetidores', [
+            'competidores' => $competidores
+        ]);
+    }
 }

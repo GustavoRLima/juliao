@@ -16,4 +16,9 @@ class CompeticaoModel extends Model
         'descricao',
         'data_evento',
     ];
+
+    function competidores()
+    {
+        return $this->belongsToMany(CompetidorModel::class, 'competicao_has_competidores', 'competicao_id', 'competidor_id')->withPivot('categoria_competicao');
+    }
 }
