@@ -5,7 +5,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { submitForm, submitFormPut } from '@/config/usaForm';
 import FormButton from '@/Components/FormButton.vue';
-import FormSelect from '@/Components/FormSelect.vue';
 import NavLink from '@/Components/NavLink.vue';
 
 const props = defineProps<{

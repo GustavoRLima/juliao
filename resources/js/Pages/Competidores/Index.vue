@@ -89,6 +89,7 @@ async function sendSearch()
                                     :href="route('competidores.edit', [competidor])"
                                     class="mr-1 items-center rounded-md border border-transparent bg-gray-300 px-2 py-1 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-300 focus:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-stone-950 dark:bg-gray-300 dark:text-stone-950 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-gray-300 dark:active:bg-gray-300"
                                     :button="true"
+                                    sugestion="Editar competidor"
                                 >
                                     <font-awesome-icon :icon="['fas', 'pen-to-square']" />
                                 </NavLink>
@@ -96,6 +97,7 @@ async function sendSearch()
                                     type="button"
                                     class="mr-1 items-center rounded-md border border-transparent bg-red-300 px-2 py-1 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-300 focus:bg-red-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-stone-950 dark:bg-red-300 dark:text-stone-950 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-red-300 dark:active:bg-red-300"
                                     @click="onDeleteItem(route('competidores.destroy', competidor.id))"
+                                    sugestion="Excluir competidor"
                                 >
                                     <font-awesome-icon :icon="['fas', 'trash']" />
                                 </FormButton>

@@ -5,6 +5,5 @@ interface Competidores {
   data_nascimento: Date,
   idade: number,
   peso: number,
-  categoria: string,
   faixa: string
 }

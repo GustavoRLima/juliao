@@ -19,6 +19,6 @@ class CompeticaoModel extends Model
 
     function competidores()
     {
-        return $this->belongsToMany(CompetidorModel::class, 'competicao_has_competidores', 'competicao_id', 'competidor_id')->withPivot('categoria_competicao');
+        return $this->belongsToMany(CompetidorModel::class, 'competicao_has_competidores', 'competicao_id', 'competidor_id')->withPivot('categoria_id', 'faixa');
     }
 }

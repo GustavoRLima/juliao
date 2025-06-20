@@ -23,7 +23,7 @@ const emit = defineEmits<{
   <button :type="props.type" @click="$emit('click', $event)"
     v-tooltip="{ 
       content: sugestion, 
-      placement: 'right', 
+      placement: 'top', 
       html: true
     }"
   >

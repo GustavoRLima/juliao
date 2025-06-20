@@ -20,8 +20,7 @@ class CompetidorModel extends Model
         'data_nascimento',
         'idade',
         'faixa',
-        'peso',
-        'categoria'
+        'peso'
     ];
 
     protected $appends = [
@@ -48,6 +47,16 @@ class CompetidorModel extends Model
     public function getFaixaNameAttribute() : string
     {
         return self::faixas[$this->faixa];
+    }
+
+    public function getCompetidoresCompeticao()
+    {
+        return $this->belongsToMany(CompeticaoModel::class, 'competicao_has_competidores', 'competidor_id', 'competicao_id')->withPivot('categoria_id', 'faixa');
+    }
+
+    public function categoria()
+    {
+        return $this->belongsToMany(CategoriaModel::class, 'competicao_has_competidores', 'competidor_id', 'categoria_id')->withPivot('competicao_id', 'faixa');
     }
 
 }

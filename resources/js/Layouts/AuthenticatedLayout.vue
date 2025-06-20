@@ -53,6 +53,12 @@ const loadingStore = useLoadingStore()
                                 >
                                     Competições
                                 </NavLink>
+                                <NavLink
+                                :href="route('categorias.index')"
+                                    :active="route().current('categorias.index')"
+                                >
+                                    Categorias
+                                </NavLink>
                             </div>
                         </div>
 

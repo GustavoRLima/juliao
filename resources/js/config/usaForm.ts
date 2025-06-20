@@ -78,7 +78,7 @@ export async function submitFormPut(form: any, route: string) {
     return response;
 }
 
-function swalFireAlert(icon: any, title: string, text: string) {
+export function swalFireAlert(icon: any, title: string, text: string) {
     Swal.fire({
         icon: icon,
         title: title,

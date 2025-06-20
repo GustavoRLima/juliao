@@ -2,11 +2,15 @@
 
 namespace App\Services;
 
+use App\Models\CompetidorModel;
+use App\Repository\CategoriaRepository;
 use App\Repository\CompetidoresRepository;
+use App\Support\CategoriaSupport;
 use Illuminate\Http\Request;
 
 class CompetidoresService 
 {
+    use CategoriaSupport;
     protected CompetidoresRepository $competidoresRepository;
 
     public function __construct()
@@ -17,6 +21,12 @@ class CompetidoresService
     public function getCompetidores($dados)
     {
         return $this->competidoresRepository->getCompetidores($dados)->paginate(15);
+    }
+
+    public function getBuscarCompetidores(Request $request)
+    {
+        $dados = $request->input();
+        return $this->competidoresRepository->getCompetidores($dados)->get(30);
     }
 
     public function store(Request $request)
@@ -67,19 +77,10 @@ class CompetidoresService
         return $retorno;
     }
 
-    // public function getCategorias()
-    // {
-    //     return [
-    //         'GALO' => [
-    //             'MIRIM 1' => 
-    //             'MIRIM 2' => 
-    //             'INFANTIL 1' => 
-    //             'INFANTIL 2' => 
-    //             'INFANTO-JUVENIL' => 
-    //             'JUVENIL' => 
-    //             'ADULTOS' => 
-    //             'MASTERS' => 
-    //         ]
-    //     ]
-    // }
+    public function getCategoriasCompetidores(CompetidorModel $competidor)
+    {
+        $categoriaRepository = new CategoriaRepository;
+        $idade = \Carbon\Carbon::parse($competidor->data_nascimento)->age;
+        return $categoriaRepository->getCategoriasCompetidores($idade, $competidor->peso, $competidor->sexo == 1 ? 2 : 3)->get()->toArray();
+    }
 }

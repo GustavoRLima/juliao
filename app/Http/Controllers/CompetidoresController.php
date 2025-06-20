@@ -90,4 +90,17 @@ class CompetidoresController extends Controller
             return $this->retornoErrorBack($e, 'Erro ao excluir competidor.');
         }
     }
+
+    function getBuscarCompetidores(Request $request)
+    {
+        return $this->competidoresService->getBuscarCompetidores($request);
+    }
+
+    function getCategoriasCompetidores(CompetidorModel $competidor)
+    {
+        return response()->json([
+            'categorias' => $this->competidoresService->getCategoriasCompetidores($competidor),
+            'faixa' => $competidor->faixa
+        ]);
+    }
 }

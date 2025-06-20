@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use App\Repository\CompeticoesRepository;
+use App\Repository\CompetidoresRepository;
 use Illuminate\Http\Request;
 
 class CompeticoesService 
@@ -43,7 +44,47 @@ class CompeticoesService
 
     function getCompetidores($competicao)
     {
-        $this->competicoesRepository->getCompetidores($competicao);
-        return $competicao->competidores;
+        $competidoresRepository = new CompetidoresRepository();
+        return $competidoresRepository->getCompetidoresCompeticao($competicao->id);
+    }
+
+    function excluirCompetidor($competicao, $competidor, $categoria)
+    {
+        if($this->competicoesRepository->excluirCompetidor($competicao->id, $competidor->id, $categoria->id)){
+            $this->competicoesRepository->logText($competicao, "exclusao de competidor", [
+                "competidor_id" => $competicao->id
+            ]);
+            return true;
+        }
+
+        return false;
+    }
+
+    public function addCompetidores($dados, $competicao)
+    {
+        if(count($dados) == 0) return true;
+
+        $competidores = collect($dados['competidores'])
+        ->unique(fn ($item) => $item['competidor_id'] . '|' . $item['categoria_id'])
+        ->values()
+        ->all();
+        
+        foreach ($competidores as $key => $value) {
+            if(!empty($this->verificaExisteCompetidor($value, $competicao))){
+                unset($competidores[$key]);
+                continue;
+            }
+        }
+        
+        if(count($dados) == 0) return true;
+        
+        $competicao->competidores()->syncWithoutDetaching($competidores);
+
+        $this->competicoesRepository->logText($competicao, 'Adicionando competidores', $dados);
+    }
+
+    public function verificaExisteCompetidor($dados, $competicao)
+    {
+        return $this->competicoesRepository->verificaExisteCompetidor($dados, $competicao);
     }
 }

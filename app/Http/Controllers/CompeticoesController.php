@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Competicoes\AddCompeditidorRequest;
 use App\Http\Requests\CompeticoesRequest;
+use App\Models\CategoriaModel;
 use App\Models\CompeticaoModel;
+use App\Models\CompetidorModel;
 use App\Services\CompeticoesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -84,11 +87,44 @@ class CompeticoesController extends Controller
         return Inertia::render('Competicoes/Tabela');
     }
     
-    public function addCompetidores(CompeticaoModel $competicao)
+    public function listaCompetidores(CompeticaoModel $competicao)
     {
         $competidores = $this->competicoesService->getCompetidores($competicao);
-        return Inertia::render('Competicoes/AddCompetidores', [
-            'competidores' => $competidores
+        
+        return Inertia::render('Competicoes/Competidores', [
+            'competidores' => $competidores,
+            'competicao' => $competicao,
         ]);
+    }
+    
+    public function addCompetidores(CompeticaoModel $competicao)
+    {
+        return Inertia::render('Competicoes/AddCompetidores', [
+            'competicao' => $competicao
+        ]);
+    }
+    
+    public function excluirCompetidores(CompeticaoModel $competicao, CompetidorModel $competidor, CategoriaModel $categoria)
+    {
+        try {
+            DB::transaction(function() use($competicao, $competidor, $categoria){
+                $this->competicoesService->excluirCompetidor($competicao, $competidor, $categoria);
+            });
+            return redirect()->back()->withInput()->with('message', ['success' => 'Competidor removido com sucesso!']);
+        } catch (\Exception $e) {
+            return $this->retornoErrorBack($e, 'Erro ao excluir competidor.');
+        }
+    }
+
+    public function salvarCompetidores(AddCompeditidorRequest $request, CompeticaoModel $competicao)
+    {
+        try {
+            DB::transaction(function() use($request, $competicao){
+                $this->competicoesService->addCompetidores($request->validated(), $competicao);
+            });
+            return redirect()->route('competicao.lista-competidores', [$competicao])->with('message', ['success' => 'Competidores adicionado com sucesso']);
+        } catch (\Exception $e) {
+            return $this->retornoErrorBack($e, 'Erro ao inserir competidores.');
+        }
     }
 }

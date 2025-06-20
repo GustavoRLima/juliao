@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\CompeticoesController;
 use App\Http\Controllers\CompetidoresController;
 use App\Http\Controllers\ProfileController;
@@ -28,13 +29,20 @@ Route::middleware('auth')->group(function () {
     Route::resource('/competidores', CompetidoresController::class)->names('competidores')->parameters([
         'competidores' => 'competidor'
     ]);
+    Route::get('/get-buscar-competidores', [CompetidoresController::class, 'getBuscarCompetidores'])->name('competidores.get-buscar-competidores');
+    Route::get('/get-categorias-competidores/{competidor}', [CompetidoresController::class, 'getCategoriasCompetidores'])->name('competidores.get-categorias-competidor');
 
     Route::resource('/competicoes', CompeticoesController::class)->names('competicoes')->parameters([
         'competicoes' => 'competicao'
     ]);
 
     Route::get('/competicao-tabela', [CompeticoesController::class, 'competicaoTabela'])->name('competicao.tabela');
-    Route::get('/competicao-add-competidores/{competicao}', [CompeticoesController::class, 'addCompetidores'])->name('competicao.add-competidores');
+    Route::get('/competicao/{competicao}/add-competidores', [CompeticoesController::class, 'addCompetidores'])->name('competicao.add-competidores');
+    Route::get('/competicao/{competicao}/lista-competidores', [CompeticoesController::class, 'listaCompetidores'])->name('competicao.lista-competidores');
+    Route::delete('/competicao/{competicao}/excluir-competidores/{competidor}/categoria/{categoria}', [CompeticoesController::class, 'excluirCompetidores'])->name('competicao.excluir-competidores');
+    Route::post('/competicao/{competicao}/salvar-competidores', [CompeticoesController::class, 'salvarCompetidores'])->name('competicao.salvar-competidores');
+
+    Route::resource('/categorias', CategoriasController::class)->names('categorias');
 });
 
 require __DIR__.'/auth.php';

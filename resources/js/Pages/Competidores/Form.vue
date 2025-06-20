@@ -22,14 +22,24 @@ const form = useForm({
     idade: props.competidor?.idade ?? '',
     peso: props.competidor?.peso ?? '',
     faixa: props.competidor?.faixa ?? '',
-    categoria: props.competidor?.categoria ?? '',
+});
+
+onMounted(() => {
+    if(props.competidor){
+        calculaIdade(props.competidor.data_nascimento);
+    }
 })
 
 watch(() => form.data_nascimento, (newValue) => {
-    if (!newValue) return form.idade = 0;
+    calculaIdade(newValue)
+});
+
+function calculaIdade(value: string | Date)
+{
+    if (!value) return form.idade = 0;
 
     const today = new Date()
-    const birth = new Date(newValue)
+    const birth = new Date(value)
 
     let years = today.getFullYear() - birth.getFullYear()
     const monthDiff = today.getMonth() - birth.getMonth()
@@ -40,7 +50,7 @@ watch(() => form.data_nascimento, (newValue) => {
     }
 
     form.idade = years;
-})
+}
 
 async function formSubmit()
 {
@@ -50,18 +60,6 @@ async function formSubmit()
         await submitForm(form, route('competidores.store'));
     }
 }
-
-watch(() => form.idade, (newValue) => {
-    if([4,5].includes(newValue)) form.categoria = 'PRÉ-MIRIM';
-    if([6,7].includes(newValue)) form.categoria = 'MIRIM 1';
-    if([8,9].includes(newValue)) form.categoria = 'MIRIM 2';
-    if([10,11].includes(newValue)) form.categoria = 'INFANTIL 1';
-    if([12,13].includes(newValue)) form.categoria = 'INFANTIL 2';
-    if([14,15].includes(newValue)) form.categoria = 'INFANTO-JUVENIL';
-    if([16,17].includes(newValue)) form.categoria = 'JUVENIL';
-    if(newValue >= 18 && newValue <= 29) form.categoria = 'ADULTOS';
-    if(newValue >= 30) form.categoria = 'MASTERS';
-})
 
 </script>
 
@@ -137,17 +135,6 @@ watch(() => form.idade, (newValue) => {
                     :required="true"
                 >
                 </FormSelect>
-                
-                <FormInput
-                    type="text"
-                    label="Categoria"
-                    id="categoria"
-                    name="categoria"
-                    v-model="form.categoria"
-                    :required="true"
-                    readonly
-                >
-                </FormInput>
 
                 <div class="flex justify-end">
                     <div class="ml-auto mt-2 inline-flex">

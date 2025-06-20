@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         $this->call([
             CompetidoresSeed::class,
+            CategoriaSeed::class,
         ]);
 
         if(count(User::get()) == 0){

@@ -6,6 +6,7 @@ const props = defineProps<{
     href: string;
     active?: boolean;
     button?: boolean;
+    sugestion?: string;
 }>();
 
 const classes = computed(() =>
@@ -16,7 +17,13 @@ const classes = computed(() =>
 </script>
 
 <template>
-    <Link :href="href" :class="button ? '' : classes">
+    <Link :href="href" :class="button ? '' : classes"
+        v-tooltip="{ 
+        content: sugestion, 
+        placement: 'top', 
+        html: true
+        }"
+    >
         <slot />
     </Link>
 </template>
