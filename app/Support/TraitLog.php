@@ -3,13 +3,15 @@
 namespace App\Support;
 
 use App\Models\LogModel;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 trait TraitLog 
 {
     public static function bootTraitLog()
     {        
-        $usuario_logado = request()->user();
+        
+        $usuario_logado = request()->user() ?? User::first();
 
         static::created(function (Model $model) use($usuario_logado) {
             $model->criarLogCadastro($usuario_logado);

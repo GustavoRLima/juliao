@@ -13,8 +13,6 @@ class CompetidoresSeed extends Seeder
      */
     public function run(): void
     {
-        if(count(CompetidorModel::get()) == 0){
-            CompetidorModel::factory()->count(50)->create();
-        }
+        CompetidorModel::factory()->count(50)->create();
     }
 }

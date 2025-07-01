@@ -1,9 +1,9 @@
 <?php return array (
-  2 => 'hashing',
-  3 => 'broadcasting',
-  5 => 'view',
-  8 => 'concurrency',
-  9 => 'cors',
+  0 => 'hashing',
+  1 => 'cors',
+  4 => 'view',
+  6 => 'concurrency',
+  8 => 'broadcasting',
   'app' => 
   array (
     'name' => 'Juliao',
@@ -13,11 +13,11 @@
     'frontend_url' => 'http://localhost:3000',
     'asset_url' => NULL,
     'timezone' => 'UTC',
-    'locale' => 'pt_BR',
-    'fallback_locale' => 'pt_BR',
+    'locale' => 'en',
+    'fallback_locale' => 'en',
     'faker_locale' => 'en_US',
     'cipher' => 'AES-256-CBC',
-    'key' => 'base64:MOB3vsejmYv0hp1zxt9VYW+kFMEmc7Vazn9nThAQj1I=',
+    'key' => 'base64:poqiztrc+PLzb6Cc7pvQgO8MF6Srge01InPbN1EItvc=',
     'previous_keys' => 
     array (
     ),
@@ -212,7 +212,7 @@
   ),
   'database' => 
   array (
-    'default' => 'mariadb',
+    'default' => 'mysql',
     'connections' => 
     array (
       'sqlite' => 
@@ -234,7 +234,7 @@
         'port' => '3306',
         'database' => 'juliao',
         'username' => 'root',
-        'password' => 'mariadbrootPW',
+        'password' => 'tiger',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
@@ -254,7 +254,7 @@
         'port' => '3306',
         'database' => 'juliao',
         'username' => 'root',
-        'password' => 'mariadbrootPW',
+        'password' => 'tiger',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
@@ -274,7 +274,7 @@
         'port' => '3306',
         'database' => 'juliao',
         'username' => 'root',
-        'password' => 'mariadbrootPW',
+        'password' => 'tiger',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -289,7 +289,7 @@
         'port' => '3306',
         'database' => 'juliao',
         'username' => 'root',
-        'password' => 'mariadbrootPW',
+        'password' => 'tiger',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -596,13 +596,13 @@
     ),
     'batching' => 
     array (
-      'database' => 'mariadb',
+      'database' => 'mysql',
       'table' => 'job_batches',
     ),
     'failed' => 
     array (
       'driver' => 'database-uuids',
-      'database' => 'mariadb',
+      'database' => 'mysql',
       'table' => 'failed_jobs',
     ),
   ),
@@ -672,6 +672,46 @@
     ),
     'rehash_on_login' => true,
   ),
+  'cors' => 
+  array (
+    'paths' => 
+    array (
+      0 => 'api/*',
+      1 => 'sanctum/csrf-cookie',
+    ),
+    'allowed_methods' => 
+    array (
+      0 => '*',
+    ),
+    'allowed_origins' => 
+    array (
+      0 => '*',
+    ),
+    'allowed_origins_patterns' => 
+    array (
+    ),
+    'allowed_headers' => 
+    array (
+      0 => '*',
+    ),
+    'exposed_headers' => 
+    array (
+    ),
+    'max_age' => 0,
+    'supports_credentials' => false,
+  ),
+  'view' => 
+  array (
+    'paths' => 
+    array (
+      0 => '/var/www/html/juliao/resources/views',
+    ),
+    'compiled' => '/var/www/html/juliao/storage/framework/views',
+  ),
+  'concurrency' => 
+  array (
+    'default' => 'process',
+  ),
   'broadcasting' => 
   array (
     'default' => 'log',
@@ -727,46 +767,6 @@
         'driver' => 'null',
       ),
     ),
-  ),
-  'view' => 
-  array (
-    'paths' => 
-    array (
-      0 => '/var/www/html/juliao/resources/views',
-    ),
-    'compiled' => '/var/www/html/juliao/storage/framework/views',
-  ),
-  'concurrency' => 
-  array (
-    'default' => 'process',
-  ),
-  'cors' => 
-  array (
-    'paths' => 
-    array (
-      0 => 'api/*',
-      1 => 'sanctum/csrf-cookie',
-    ),
-    'allowed_methods' => 
-    array (
-      0 => '*',
-    ),
-    'allowed_origins' => 
-    array (
-      0 => '*',
-    ),
-    'allowed_origins_patterns' => 
-    array (
-    ),
-    'allowed_headers' => 
-    array (
-      0 => '*',
-    ),
-    'exposed_headers' => 
-    array (
-    ),
-    'max_age' => 0,
-    'supports_credentials' => false,
   ),
   'inertia' => 
   array (
