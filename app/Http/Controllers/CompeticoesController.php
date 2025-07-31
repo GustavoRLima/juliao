@@ -127,4 +127,28 @@ class CompeticoesController extends Controller
             return $this->retornoErrorBack($e, 'Erro ao inserir competidores.');
         }
     }
+
+    public function gerarTabelaCompeticao(Request $request, CompeticaoModel $competicao)
+    {
+        $categorias = $this->competicoesService->getChaveamentoCategoria($competicao);
+        if(!$competicao->chave_gerada || $request->boolean('gerar_nova_chave')){
+            DB::transaction(function() use($competicao, $categorias){
+                return $this->competicoesService->gerarChaves($competicao, $categorias);
+            });
+        }
+
+        return Inertia::render('Competicoes/ListaChaveamento', [
+            'categorias' => $categorias,
+            'competicao' => $competicao
+        ]);
+    }
+
+    public function verTabelaCompeticao(CompeticaoModel $competicao, CategoriaModel $categoria, string $faixa)
+    {
+        $competidores = $this->competicoesService->getCompetidoresCategoria($competicao, $categoria, $faixa);
+
+        return Inertia::render('Competicoes/Tabela', [
+            'competidores' => $competidores
+        ]);
+    }
 }

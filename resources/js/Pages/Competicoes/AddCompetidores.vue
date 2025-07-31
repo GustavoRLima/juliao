@@ -8,6 +8,7 @@ import FormButton from '@/Components/FormButton.vue';
 import { axiosGet } from '@/config/axiosConfig';
 import { ref } from 'vue';
 import NavLink from '@/Components/NavLink.vue';
+import FormInput from '@/Components/FormInput.vue';
 
 const props = defineProps<{
     competicao: Competicao
@@ -76,11 +77,6 @@ async function getCategoria(index: number) {
 
         <div class="bg-white shadow dark:bg-gray-800 mt-3 mr-auto ml-auto w-4/5 mx-auto p-5">
             <form @submit.prevent="formSubmit">
-                <FormButton type="button"
-                    class="mr-1 items-center rounded-md border border-transparent bg-blue-300 px-2 py-1 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-blue-300 focus:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-stone-950 dark:bg-blue-300 dark:text-stone-950 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-blue-300 dark:active:bg-blue-300"
-                    sugestion="Adicionar competidor." @click="addCompetidor">
-                    <font-awesome-icon :icon="['fas', 'plus']" />
-                </FormButton>
                 <template v-for="(competidor, index) in form.competidores" :key="competidor.position">
                     <div class="mt-2">
                         <div class="mb-2">
@@ -90,7 +86,7 @@ async function getCategoria(index: number) {
                                 <font-awesome-icon :icon="['fas', 'minus']" />
                             </FormButton>
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-4 gap-4">
                             <div class="">
                                 <AutoComplete :apiUrl="route('competidores.get-buscar-competidores')" labelKey="nome"
                                     v-model="competidor.competidor_id" :id="`competidor.${index}.competidor_id`" clearable
@@ -110,6 +106,12 @@ async function getCategoria(index: number) {
                         </div>
                     </div>
                 </template>
+
+                <FormButton type="button"
+                    class="mr-1 items-center rounded-md border border-transparent bg-blue-300 px-2 py-1 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-blue-300 focus:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-stone-950 dark:bg-blue-300 dark:text-stone-950 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-blue-300 dark:active:bg-blue-300"
+                    sugestion="Adicionar competidor." @click="addCompetidor">
+                    <font-awesome-icon :icon="['fas', 'plus']" />
+                </FormButton>
 
                 <div class="flex justify-end">
                     <div class="ml-auto mt-2 inline-flex">

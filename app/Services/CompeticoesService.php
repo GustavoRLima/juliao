@@ -3,6 +3,7 @@
 
 namespace App\Services;
 
+use App\Models\CompeticaoModel;
 use App\Repository\CompeticoesRepository;
 use App\Repository\CompetidoresRepository;
 use Illuminate\Http\Request;
@@ -86,5 +87,38 @@ class CompeticoesService
     public function verificaExisteCompetidor($dados, $competicao)
     {
         return $this->competicoesRepository->verificaExisteCompetidor($dados, $competicao);
+    }
+
+    public function getChaveamentoCategoria(CompeticaoModel $competicao)
+    {
+        return $this->competicoesRepository->getCategorias($competicao);
+    }
+
+    public function gerarChaves(CompeticaoModel $competicao, $categorias)
+    {        
+        foreach ($categorias as $categoria) {
+
+            $faixas = $this->competicoesRepository->getFaixasCategoria($competicao, $categoria);
+            foreach ($faixas as $faixa) {
+
+                $competidores = $this->competicoesRepository->getCompetidoresCompeticao($competicao, $categoria, $faixa->faixa)->shuffle();
+                foreach ($competidores as $keyc => $competidor) {
+                    
+                    $grupo = 1;
+                    if(is_int($keyc/2)){
+                        $grupo = 2;
+                    }
+                    
+                    $this->competicoesRepository->updateCompetidorCompeticao($competicao, $competidor, $categoria, ['grupo' => $grupo, 'ordem' => $keyc]);
+                }
+            }
+        }
+
+        $this->competicoesRepository->update($competicao, ['chave_gerada' => 1]);
+    }
+
+    public function getCompetidoresCategoria($competicao, $categoria, $faixa)
+    {
+        return $this->competicoesRepository->getCompetidoresCategoria($competicao, $categoria, $faixa);
     }
 }

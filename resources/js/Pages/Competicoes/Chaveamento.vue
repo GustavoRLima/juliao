@@ -3,7 +3,14 @@ import { reactive, computed, ref, onMounted } from 'vue'
 import Swal from 'sweetalert2'
 
 interface Props {
-  competitors: string[]
+  competitors: string[],
+  competidores: {
+      id: number,
+      faixa: string,
+      nome: string,
+      posicao: number,
+      grupo: number,
+  }[]
 }
 
 const props = defineProps<Props>()

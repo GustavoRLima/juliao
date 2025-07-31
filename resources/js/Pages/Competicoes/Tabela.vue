@@ -3,6 +3,21 @@
 import Chaveamento from '@/Pages/Competicoes/Chaveamento.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
+
+const props = defineProps<{
+    competidores: {
+        id: number,
+        faixa: string,
+        nome: string,
+        posicao: number,
+        grupo: number,
+    }[]
+}>();
+
+onMounted(() => {
+    console.log(props.competidores)
+})
 
 const competitors = [
   'Lucas Fagner Santos - Cassão Team Janaúba',
@@ -32,6 +47,6 @@ const competitors = [
                 Tabela competição 
             </h2>
         </template>
-        <Chaveamento :competitors="competitors" />
+        <Chaveamento :competitors="competitors" :competidores="competidores" />
     </AuthenticatedLayout>
 </template>

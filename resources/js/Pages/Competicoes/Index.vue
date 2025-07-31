@@ -109,6 +109,15 @@ async function sendSearch()
                                 >
                                     <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
                                 </NavLink>
+                                <NavLink
+                                    v-if="competicao.competidores.length > 0"
+                                    :href="route('competicao.gerar-tabela-competicao', [competicao])"
+                                    class="mr-1 items-center rounded-md border border-transparent bg-gray-300 px-2 py-1 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-300 focus:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-stone-950 dark:bg-gray-300 dark:text-stone-950 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-gray-300 dark:active:bg-gray-300"
+                                    :button="true"
+                                    :sugestion="(competicao.chave_gerada) ? 'Lista de chaveamento' : 'Gerar chaveamento de competidores'"
+                                >
+                                    <font-awesome-icon :icon="['fas', 'clipboard-list']" />
+                                </NavLink>
                             </td>
                         </tr>
                     </template>

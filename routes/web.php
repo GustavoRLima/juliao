@@ -41,6 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/competicao/{competicao}/lista-competidores', [CompeticoesController::class, 'listaCompetidores'])->name('competicao.lista-competidores');
     Route::delete('/competicao/{competicao}/excluir-competidores/{competidor}/categoria/{categoria}', [CompeticoesController::class, 'excluirCompetidores'])->name('competicao.excluir-competidores');
     Route::post('/competicao/{competicao}/salvar-competidores', [CompeticoesController::class, 'salvarCompetidores'])->name('competicao.salvar-competidores');
+    Route::get('/competicao/{competicao}/gerar-tabela-competicao', [CompeticoesController::class, 'gerarTabelaCompeticao'])->name('competicao.gerar-tabela-competicao');
+    Route::get('/competicao/{competicao}/categoria/{categoria}/faixa/{faixa}', [CompeticoesController::class, 'verTabelaCompeticao'])->name('competicao.ver-tabela-competicao');
 
     Route::resource('/categorias', CategoriasController::class)->names('categorias');
 });

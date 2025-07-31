@@ -33,7 +33,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::na4bsuHsdr2F3AGn',
+            '_route' => 'generated::T5bHdNFMyOv1fbe0',
           ),
           1 => NULL,
           2 => 
@@ -53,7 +53,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::EOaXGi7K2vGRtL5M',
+            '_route' => 'generated::udw1QoMEPMqK6Jb2',
           ),
           1 => NULL,
           2 => 
@@ -370,7 +370,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::e47Z1z9QyKIQTxk1',
+            '_route' => 'generated::PTFoxWflj8HeHbsM',
           ),
           1 => NULL,
           2 => 
@@ -406,7 +406,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::X2DryHvWl4rS3suk',
+            '_route' => 'generated::wplE68uQVmB2Edpk',
           ),
           1 => NULL,
           2 => 
@@ -536,7 +536,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::R4pt8tXdXiPQDjBy',
+            '_route' => 'generated::QjYfgopBrao6iipg',
           ),
           1 => NULL,
           2 => 
@@ -590,7 +590,7 @@ app('router')->setCompiledRoutes(
     ),
     2 => 
     array (
-      0 => '{^(?|/c(?|ompeti(?|dores/([^/]++)(?|(*:38)|/edit(*:50)|(*:57))|c(?|oes/([^/]++)(?|(*:84)|/edit(*:96)|(*:103))|ao/([^/]++)/(?|add\\-competidores(*:144)|lista\\-competidores(*:171)|excluir\\-competidores/([^/]++)/categoria/([^/]++)(*:228)|salvar\\-competidores(*:256))))|ategorias/([^/]++)(?|(*:288)|/edit(*:301)|(*:309)))|/get\\-categorias\\-competidores/([^/]++)(*:358)|/reset\\-password/([^/]++)(*:391)|/verify\\-email/([^/]++)/([^/]++)(*:431)|/storage/(.*)(*:452))/?$}sDu',
+      0 => '{^(?|/c(?|ompeti(?|dores/([^/]++)(?|(*:38)|/edit(*:50)|(*:57))|c(?|oes/([^/]++)(?|(*:84)|/edit(*:96)|(*:103))|ao/([^/]++)/(?|add\\-competidores(*:144)|lista\\-competidores(*:171)|excluir\\-competidores/([^/]++)/categoria/([^/]++)(*:228)|salvar\\-competidores(*:256)|gerar\\-tabela\\-competicao(*:289)|categoria/([^/]++)/faixa/([^/]++)(*:330))))|ategorias/([^/]++)(?|(*:362)|/edit(*:375)|(*:383)))|/get\\-categorias\\-competidores/([^/]++)(*:432)|/reset\\-password/([^/]++)(*:465)|/verify\\-email/([^/]++)/([^/]++)(*:505)|/storage/(.*)(*:526))/?$}sDu',
     ),
     3 => 
     array (
@@ -862,7 +862,55 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      288 => 
+      289 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competicao.gerar-tabela-competicao',
+          ),
+          1 => 
+          array (
+            0 => 'competicao',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      330 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competicao.ver-tabela-competicao',
+          ),
+          1 => 
+          array (
+            0 => 'competicao',
+            1 => 'categoria',
+            2 => 'faixa',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+      ),
+      362 => 
       array (
         0 => 
         array (
@@ -885,7 +933,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      301 => 
+      375 => 
       array (
         0 => 
         array (
@@ -908,7 +956,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      309 => 
+      383 => 
       array (
         0 => 
         array (
@@ -950,7 +998,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      358 => 
+      432 => 
       array (
         0 => 
         array (
@@ -973,7 +1021,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      391 => 
+      465 => 
       array (
         0 => 
         array (
@@ -996,7 +1044,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      431 => 
+      505 => 
       array (
         0 => 
         array (
@@ -1020,7 +1068,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      452 => 
+      526 => 
       array (
         0 => 
         array (
@@ -1095,7 +1143,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::na4bsuHsdr2F3AGn' => 
+    'generated::T5bHdNFMyOv1fbe0' => 
     array (
       'methods' => 
       array (
@@ -1124,7 +1172,7 @@ app('router')->setCompiledRoutes(
                         \'exception\' => $exception,
                     ]), status: $exception ? 500 : 200);
                 }";s:5:"scope";s:54:"Illuminate\\Foundation\\Configuration\\ApplicationBuilder";s:4:"this";N;s:4:"self";s:32:"00000000000005da0000000000000000";}}',
-        'as' => 'generated::na4bsuHsdr2F3AGn',
+        'as' => 'generated::T5bHdNFMyOv1fbe0',
       ),
       'fallback' => false,
       'defaults' => 
@@ -1140,7 +1188,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::EOaXGi7K2vGRtL5M' => 
+    'generated::udw1QoMEPMqK6Jb2' => 
     array (
       'methods' => 
       array (
@@ -1167,7 +1215,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::EOaXGi7K2vGRtL5M',
+        'as' => 'generated::udw1QoMEPMqK6Jb2',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2127,6 +2175,82 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
+    'competicao.gerar-tabela-competicao' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'competicao/{competicao}/gerar-tabela-competicao',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'uses' => 'App\\Http\\Controllers\\CompeticoesController@gerarTabelaCompeticao',
+        'controller' => 'App\\Http\\Controllers\\CompeticoesController@gerarTabelaCompeticao',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'competicao.gerar-tabela-competicao',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'competicao.ver-tabela-competicao' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'competicao/{competicao}/categoria/{categoria}/faixa/{faixa}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'uses' => 'App\\Http\\Controllers\\CompeticoesController@verTabelaCompeticao',
+        'controller' => 'App\\Http\\Controllers\\CompeticoesController@verTabelaCompeticao',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'competicao.ver-tabela-competicao',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
     'categorias.index' => 
     array (
       'methods' => 
@@ -2429,7 +2553,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::e47Z1z9QyKIQTxk1' => 
+    'generated::PTFoxWflj8HeHbsM' => 
     array (
       'methods' => 
       array (
@@ -2450,7 +2574,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::e47Z1z9QyKIQTxk1',
+        'as' => 'generated::PTFoxWflj8HeHbsM',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2504,7 +2628,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::X2DryHvWl4rS3suk' => 
+    'generated::wplE68uQVmB2Edpk' => 
     array (
       'methods' => 
       array (
@@ -2525,7 +2649,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::X2DryHvWl4rS3suk',
+        'as' => 'generated::wplE68uQVmB2Edpk',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2845,7 +2969,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::R4pt8tXdXiPQDjBy' => 
+    'generated::QjYfgopBrao6iipg' => 
     array (
       'methods' => 
       array (
@@ -2866,7 +2990,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::R4pt8tXdXiPQDjBy',
+        'as' => 'generated::QjYfgopBrao6iipg',
       ),
       'fallback' => false,
       'defaults' => 
