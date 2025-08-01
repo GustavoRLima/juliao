@@ -33,7 +33,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::T5bHdNFMyOv1fbe0',
+            '_route' => 'generated::G04gaphHoXI88V0H',
           ),
           1 => NULL,
           2 => 
@@ -53,7 +53,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::udw1QoMEPMqK6Jb2',
+            '_route' => 'generated::JD6BnDQC0Dh3gp3o',
           ),
           1 => NULL,
           2 => 
@@ -291,6 +291,26 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
+      '/competicao-competidor-vencedor-retorno' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'competicao.competidor-vencedor-retorno',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
       '/categorias' => 
       array (
         0 => 
@@ -370,7 +390,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::PTFoxWflj8HeHbsM',
+            '_route' => 'generated::Mba5U0l7WzFC6xWx',
           ),
           1 => NULL,
           2 => 
@@ -406,7 +426,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::wplE68uQVmB2Edpk',
+            '_route' => 'generated::uE6aolMeZrSRyYdI',
           ),
           1 => NULL,
           2 => 
@@ -536,7 +556,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::QjYfgopBrao6iipg',
+            '_route' => 'generated::YBzBjUMSR1edgTgm',
           ),
           1 => NULL,
           2 => 
@@ -1143,7 +1163,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::T5bHdNFMyOv1fbe0' => 
+    'generated::G04gaphHoXI88V0H' => 
     array (
       'methods' => 
       array (
@@ -1172,7 +1192,7 @@ app('router')->setCompiledRoutes(
                         \'exception\' => $exception,
                     ]), status: $exception ? 500 : 200);
                 }";s:5:"scope";s:54:"Illuminate\\Foundation\\Configuration\\ApplicationBuilder";s:4:"this";N;s:4:"self";s:32:"00000000000005da0000000000000000";}}',
-        'as' => 'generated::T5bHdNFMyOv1fbe0',
+        'as' => 'generated::G04gaphHoXI88V0H',
       ),
       'fallback' => false,
       'defaults' => 
@@ -1188,7 +1208,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::udw1QoMEPMqK6Jb2' => 
+    'generated::JD6BnDQC0Dh3gp3o' => 
     array (
       'methods' => 
       array (
@@ -1215,7 +1235,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::udw1QoMEPMqK6Jb2',
+        'as' => 'generated::JD6BnDQC0Dh3gp3o',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2251,6 +2271,44 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
+    'competicao.competidor-vencedor-retorno' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'competicao-competidor-vencedor-retorno',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'uses' => 'App\\Http\\Controllers\\CompeticoesController@competidorVencedorRetorno',
+        'controller' => 'App\\Http\\Controllers\\CompeticoesController@competidorVencedorRetorno',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'competicao.competidor-vencedor-retorno',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
     'categorias.index' => 
     array (
       'methods' => 
@@ -2553,7 +2611,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::PTFoxWflj8HeHbsM' => 
+    'generated::Mba5U0l7WzFC6xWx' => 
     array (
       'methods' => 
       array (
@@ -2574,7 +2632,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::PTFoxWflj8HeHbsM',
+        'as' => 'generated::Mba5U0l7WzFC6xWx',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2628,7 +2686,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::wplE68uQVmB2Edpk' => 
+    'generated::uE6aolMeZrSRyYdI' => 
     array (
       'methods' => 
       array (
@@ -2649,7 +2707,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::wplE68uQVmB2Edpk',
+        'as' => 'generated::uE6aolMeZrSRyYdI',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2969,7 +3027,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::QjYfgopBrao6iipg' => 
+    'generated::YBzBjUMSR1edgTgm' => 
     array (
       'methods' => 
       array (
@@ -2990,7 +3048,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::QjYfgopBrao6iipg',
+        'as' => 'generated::YBzBjUMSR1edgTgm',
       ),
       'fallback' => false,
       'defaults' => 

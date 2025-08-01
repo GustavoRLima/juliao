@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Competicoes\AddCompeditidorRequest;
+use App\Http\Requests\Competicoes\CompetidorVencedorRequest;
 use App\Http\Requests\CompeticoesRequest;
 use App\Models\CategoriaModel;
 use App\Models\CompeticaoModel;
@@ -87,11 +88,16 @@ class CompeticoesController extends Controller
         return Inertia::render('Competicoes/Tabela');
     }
     
-    public function listaCompetidores(CompeticaoModel $competicao)
+    public function listaCompetidores(Request $request, CompeticaoModel $competicao)
     {
-        $competidores = $this->competicoesService->getCompetidores($competicao);
+        $dados = $request->input();
+        $filtros = [
+            'search' => $dados['search'] ?? ''
+        ];
+        $competidores = $this->competicoesService->getCompetidores($competicao, $filtros);
         
         return Inertia::render('Competicoes/Competidores', [
+            'filtros' => $filtros,
             'competidores' => $competidores,
             'competicao' => $competicao,
         ]);
@@ -137,6 +143,12 @@ class CompeticoesController extends Controller
             });
         }
 
+        if($request->boolean('gerar_nova_chave')){
+            return response()->json([
+                'categorias' => $categorias
+            ]);
+        }
+
         return Inertia::render('Competicoes/ListaChaveamento', [
             'categorias' => $categorias,
             'competicao' => $competicao
@@ -145,10 +157,27 @@ class CompeticoesController extends Controller
 
     public function verTabelaCompeticao(CompeticaoModel $competicao, CategoriaModel $categoria, string $faixa)
     {
-        $competidores = $this->competicoesService->getCompetidoresCategoria($competicao, $categoria, $faixa);
+        $competidores1 = $this->competicoesService->getCompetidoresCategoria($competicao, $categoria, $faixa, 1);
+        $competidores2 = $this->competicoesService->getCompetidoresCategoria($competicao, $categoria, $faixa, 2);
 
         return Inertia::render('Competicoes/Tabela', [
-            'competidores' => $competidores
+            'competidores1' => $competidores1,
+            'competidores2' => $competidores2,
+            'competicao' => $competicao
+        ]);
+    }
+
+    public function competidorVencedorRetorno(CompetidorVencedorRequest $request)
+    {
+        $dados = $request->validated();
+        $dados['tipo'] = $request->boolean('tipo');
+
+        $competidor = DB::transaction(function() use($dados){
+            return $this->competicoesService->vencedorRetorno($dados);
+        });
+        
+        return response()->json([
+            'competidor' => $competidor
         ]);
     }
 }

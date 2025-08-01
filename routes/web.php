@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/competicao/{competicao}/salvar-competidores', [CompeticoesController::class, 'salvarCompetidores'])->name('competicao.salvar-competidores');
     Route::get('/competicao/{competicao}/gerar-tabela-competicao', [CompeticoesController::class, 'gerarTabelaCompeticao'])->name('competicao.gerar-tabela-competicao');
     Route::get('/competicao/{competicao}/categoria/{categoria}/faixa/{faixa}', [CompeticoesController::class, 'verTabelaCompeticao'])->name('competicao.ver-tabela-competicao');
+    Route::get('competicao-competidor-vencedor-retorno', [CompeticoesController::class, 'competidorVencedorRetorno'])->name('competicao.competidor-vencedor-retorno');
 
     Route::resource('/categorias', CategoriasController::class)->names('categorias');
 });

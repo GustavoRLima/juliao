@@ -67,6 +67,7 @@ class CompeticoesRepository extends BaseRepository
             ->select('cc.faixa', DB::raw("COUNT(cc.competidor_id) as qtd_competidores"), 'c.nome', 'c.id')
             ->join('categorias as c', 'c.id', '=', 'cc.categoria_id')
             ->where('competicao_id', $competicao->id)
+            ->whereNotNull('grupo')
             ->groupBy('cc.faixa', 'c.nome', 'c.id')
             ->get();
     }
@@ -81,12 +82,12 @@ class CompeticoesRepository extends BaseRepository
         ->get();
     }
 
-    public function updateCompetidorCompeticao($competicao, $competidor, $categoria, $data)
+    public function updateCompetidorCompeticao($competicao_id, $competidor_id, $categoria_id, $data)
     {
         return DB::table('competicao_has_competidores')
-        ->where('competicao_id', $competicao->id)
-        ->where('categoria_id', $categoria->id)
-        ->where('competidor_id', $competidor->id)
+        ->where('competicao_id', $competicao_id)
+        ->where('categoria_id', $categoria_id)
+        ->where('competidor_id', $competidor_id)
         ->update($data);
     }
 
@@ -95,15 +96,28 @@ class CompeticoesRepository extends BaseRepository
         return $competicao->competidores()->wherePivot('categoria_id', $categoria->id)->wherePivot('faixa', $faixa)->get();
     }
 
-    public function getCompetidoresCategoria($competicao, $categoria, $faixa)
+    public function getCompetidoresCategoria($competicao, $categoria, $faixa, $grupo)
     {
         return DB::table('competicao_has_competidores as cc')
-            ->select('cc.faixa', 'c.nome', 'c.id', 'cc.vitorias', 'cc.grupo')
+            ->select('cc.faixa', 'c.nome', 'c.id', 'cc.vitorias', 'cc.grupo', 'cc.categoria_id', 'cc.competicao_id')
             ->join('competidores as c', 'c.id', '=', 'cc.competidor_id')
             ->where('competicao_id', $competicao->id)
             ->where('categoria_id', $categoria->id)
             ->where('cc.faixa', $faixa)
+            ->where('cc.grupo', $grupo)
             ->orderBy('cc.ordem', 'ASC')
             ->get();
+    }
+   
+    public function firstCompetidoresCategoria($competicao_id, $competidor_id, $categoria_id)
+    {
+        return DB::table('competicao_has_competidores as cc')
+            ->select('cc.faixa', 'c.nome', 'c.id', 'cc.vitorias', 'cc.grupo', 'cc.categoria_id', 'cc.competicao_id')
+            ->join('competidores as c', 'c.id', '=', 'cc.competidor_id')
+            ->where('competicao_id', $competicao_id)
+            ->where('categoria_id', $categoria_id)
+            ->where('competidor_id', $competidor_id)
+            ->orderBy('cc.ordem', 'ASC')
+            ->first();
     }
 }

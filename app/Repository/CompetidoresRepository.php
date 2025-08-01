@@ -30,7 +30,7 @@ class CompetidoresRepository extends BaseRepository
             ->orderBy('nome', 'ASC');
     }
 
-    public function getCompetidoresCompeticao($competicao_id)
+    public function getCompetidoresCompeticao($competicao_id, $filtros)
     {
         $faixas = CompetidorModel::getFaixas();
 
@@ -47,6 +47,9 @@ class CompetidoresRepository extends BaseRepository
             'cat.id as categoria_id',
             'cat.nome as categoria_nome'
         )
+        ->when(isset($filtros['search']), function ($q) use($filtros){
+            $q->where('c.nome', 'like', "{$filtros['search']}%");
+        })
         ->orderBy('c.nome', 'ASC')
         ->paginate(15)
         ->through(function ($item) use ($faixas) {

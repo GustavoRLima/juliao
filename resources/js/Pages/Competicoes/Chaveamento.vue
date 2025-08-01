@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { reactive, computed, ref, onMounted } from 'vue'
 import Swal from 'sweetalert2'
+import Competidores from './Competidores.vue';
+import NavLink from '@/Components/NavLink.vue';
+import { axiosGet } from '@/config/axiosConfig';
 
 interface Props {
-  competitors: string[],
-  competidores: {
-      id: number,
-      faixa: string,
-      nome: string,
-      posicao: number,
-      grupo: number,
-  }[]
+  competicao: Competicao,
+  competidores1: CompetidoresTabela[]
+  competidores2: CompetidoresTabela[]
 }
 
 const props = defineProps<Props>()
@@ -19,8 +17,8 @@ function getNextPowerOfTwo(n: number): number {
   return Math.pow(2, Math.ceil(Math.log2(n)))
 }
 
-function generateRounds(players: (string | null)[]) {
-  const rounds: (string | null)[][] = []
+function generateRounds(players: (CompetidoresTabela | null)[]) {
+  const rounds: (CompetidoresTabela | null)[][] = []
   let current = players
   while (current.length > 1) {
     rounds.push([...current])
@@ -30,24 +28,18 @@ function generateRounds(players: (string | null)[]) {
   return rounds
 }
 
-const leftState = reactive({ rounds: [] as (string | null)[][] })
-const rightState = reactive({ rounds: [] as (string | null)[][] })
-const finalMatch = ref<(string | null)[]>([])
-const finalWinner = ref<string | null>(null)
-const secondPlace = ref<string | null>(null)
-const thirdPlaces = ref<string[]>([])
+const leftState = reactive({ rounds: [] as (CompetidoresTabela | null)[][] })
+const rightState = reactive({ rounds: [] as (CompetidoresTabela | null)[][] })
+const finalMatch = ref<(CompetidoresTabela | null)[]>([])
+const finalWinner = ref<CompetidoresTabela | null>(null)
+const secondPlace = ref<CompetidoresTabela | null>(null)
+const thirdPlaces = ref<CompetidoresTabela[]>([])
 const showPodium = ref(false)
 
 function initRounds() {
-  const half = Math.ceil(props.competitors.length / 2)
-  const left = [...props.competitors.slice(0, half)]
-  const right = [...props.competitors.slice(half)]
+  leftState.rounds = generateRounds(props.competidores1)
+  rightState.rounds = generateRounds(props.competidores2)
 
-  const leftFilled = [...left, ...Array(getNextPowerOfTwo(half) - left.length).fill(null)]
-  const rightFilled = [...right, ...Array(getNextPowerOfTwo(right.length) - right.length).fill(null)]
-
-  leftState.rounds = generateRounds(leftFilled)
-  rightState.rounds = generateRounds(rightFilled)
   finalMatch.value = [null, null]
   finalWinner.value = null
   secondPlace.value = null
@@ -55,7 +47,7 @@ function initRounds() {
   showPodium.value = false
 }
 
-function getMatches(round: (string | null)[]) {
+function getMatches(round: (CompetidoresTabela | null)[]) {
   const matches = []
   for (let i = 0; i < round.length; i += 2) {
     matches.push([round[i], round[i + 1]])
@@ -99,23 +91,42 @@ async function handleClick(side: 'left' | 'right', roundIndex: number, matchInde
   const winner = currentSide.rounds[nextRound]?.[matchIndex]
   if (winner === currentPlayer) {
     const confirmed = await Swal.fire({
-      title: `Deseja remover a vitória de ${currentPlayer}?`,
+      title: `Deseja remover a vitória de ${currentPlayer.nome}?`,
       showCancelButton: true,
       confirmButtonText: 'Sim',
       cancelButtonText: 'Não'
     })
     if (confirmed.isConfirmed) {
+
       currentSide.rounds[nextRound][matchIndex] = null
+      await axiosGet(route('competicao.competidor-vencedor-retorno'), {
+        competidor_id: currentPlayer.id,
+        categoria_id: currentPlayer.categoria_id,
+        competicao_id: currentPlayer.competicao_id,
+        vitorias: currentPlayer.vitorias
+      });
+
+      currentPlayer.vitorias -= 1;
     }
   } else if (!winner) {
     const confirmed = await Swal.fire({
-      title: `Deseja declarar ${currentPlayer} como vencedor?`,
+      title: `Deseja declarar ${currentPlayer.nome} como vencedor?`,
       showCancelButton: true,
       confirmButtonText: 'Sim',
       cancelButtonText: 'Não'
     })
     if (confirmed.isConfirmed) {
       currentSide.rounds[nextRound][matchIndex] = currentPlayer
+      
+      await axiosGet(route('competicao.competidor-vencedor-retorno'), {
+        competidor_id: currentPlayer.id,
+        categoria_id: currentPlayer.categoria_id,
+        competicao_id: currentPlayer.competicao_id,
+        vitorias: currentPlayer.vitorias,
+        tipo: 1
+      });
+
+      currentPlayer.vitorias += 1
 
       if (nextRound === currentSide.rounds.length - 1) {
         finalMatch.value[side === 'left' ? 0 : 1] = currentPlayer
@@ -128,11 +139,11 @@ function parOuImpar(numero: number) {
   return numero % 2 === 0 ? 1 : -1;
 }
 
-async function selectFinalWinner(player: string | null) {
+async function selectFinalWinner(player: CompetidoresTabela | null) {
   if (!player) return
 
   const confirm = await Swal.fire({
-    title: `Deseja declarar ${player} como vencedor da final?`,
+    title: `Deseja declarar ${player?.nome} como vencedor da final?`,
     showCancelButton: true,
     confirmButtonText: 'Sim',
     cancelButtonText: 'Não'
@@ -145,7 +156,7 @@ async function selectFinalWinner(player: string | null) {
     const thirdLeft = leftState.rounds[leftState.rounds.length - 2].find(p => p !== finalMatch.value[0])
     const thirdRight = rightState.rounds[rightState.rounds.length - 2].find(p => p !== finalMatch.value[1])
 
-    thirdPlaces.value = [thirdLeft, thirdRight].filter(Boolean) as string[]
+    thirdPlaces.value = [thirdLeft, thirdRight].filter(Boolean) as CompetidoresTabela[]
     showPodium.value = true
   }
 }
@@ -164,7 +175,7 @@ const rightRounds = computed(() => rightState.rounds.slice(0, -1))
 
     <!-- Container com scroll horizontal -->
     <div class="w-full overflow-x-auto max-w-full overflow-y-hidden pb-4">
-      <div class="flex">
+      <div class="flex justify-center min-w-fit mx-auto gap-x-6">
 
         <!-- Lado Esquerdo -->
         <div class="flex">
@@ -172,14 +183,14 @@ const rightRounds = computed(() => rightState.rounds.slice(0, -1))
             class="flex flex-col items-center mx-1 sm:mx-2"
             :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }">
             <div v-for="(match, mIndex) in getMatches(round)" :key="'left-match-' + mIndex"
-              class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-40 sm:w-48 mt-auto mb-auto">
+              class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-40 sm:w-48 mt-auto mb-auto" :style="(rIndex == 0) ? 'margin-top: 10px' : ''">
               <div v-for="(player, pIndex) in match" :key="pIndex"
                 class="w-full h-10 sm:h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-xs sm:text-sm text-center"
                 :class="{
                   'bg-green-700': isWinner('left', rIndex, mIndex, pIndex),
                   'opacity-50 pointer-events-none': opponentWon('left', rIndex, mIndex, pIndex),
                 }" @click="handleClick('left', rIndex, mIndex, pIndex)">
-                {{ player || '--' }}
+                {{ player?.nome || '--' }}
               </div>
             </div>
           </div>
@@ -197,7 +208,7 @@ const rightRounds = computed(() => rightState.rounds.slice(0, -1))
                   'bg-green-700': finalWinner === player,
                   'opacity-50 pointer-events-none': finalWinner && finalWinner !== player,
                 }" @click="selectFinalWinner(player)">
-                {{ player || '--' }}
+                {{ player?.nome || '--' }}
               </div>
             </div>
           </div>
@@ -209,14 +220,14 @@ const rightRounds = computed(() => rightState.rounds.slice(0, -1))
             class="flex flex-col items-center mx-1 sm:mx-2"
             :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }">
             <div v-for="(match, mIndex) in getMatches(round)" :key="'right-match-' + mIndex"
-              class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-40 sm:w-48 mt-auto mb-auto">
+              class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-40 sm:w-48 mt-auto mb-auto" :style="(rIndex == 0) ? 'margin-top: 10px' : ''">
               <div v-for="(player, pIndex) in match" :key="pIndex"
                 class="w-full h-10 sm:h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-xs sm:text-sm text-center"
                 :class="{
                   'bg-green-700': isWinner('right', rIndex, mIndex, pIndex),
                   'opacity-50 pointer-events-none': opponentWon('right', rIndex, mIndex, pIndex),
                 }" @click="handleClick('right', rIndex, mIndex, pIndex)">
-                {{ player || '--' }}
+                {{ player?.nome || '--' }}
               </div>
             </div>
           </div>
@@ -237,18 +248,27 @@ const rightRounds = computed(() => rightState.rounds.slice(0, -1))
         <tbody>
           <tr>
             <td class="border-b border-white p-2">1º</td>
-            <td class="border-b border-white p-2">{{ finalWinner }}</td>
+            <td class="border-b border-white p-2">{{ finalWinner?.nome || '--' }}</td>
           </tr>
           <tr>
             <td class="border-b border-white p-2">2º</td>
-            <td class="border-b border-white p-2">{{ secondPlace }}</td>
+            <td class="border-b border-white p-2">{{ secondPlace?.nome || '--' }}</td>
           </tr>
           <tr v-for="(third, index) in thirdPlaces" :key="index">
             <td class="border-b border-white p-2">3º</td>
-            <td class="border-b border-white p-2">{{ third }}</td>
+            <td class="border-b border-white p-2">{{ third?.nome || '--' }}</td>
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="flex justify-end p-4">
+      <NavLink
+          :href="route('competicao.gerar-tabela-competicao', [competicao])"
+          class="mr-1 items-center rounded-md border border-transparent bg-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-300 focus:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-stone-950 dark:bg-gray-300 dark:text-stone-950 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-gray-300 dark:active:bg-gray-300"
+          :button="true"
+      >
+          Voltar
+      </NavLink>
     </div>
   </div>
 </template>

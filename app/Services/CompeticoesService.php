@@ -43,10 +43,10 @@ class CompeticoesService
         return true;
     }
 
-    function getCompetidores($competicao)
+    function getCompetidores($competicao, $filtros)
     {
         $competidoresRepository = new CompetidoresRepository();
-        return $competidoresRepository->getCompetidoresCompeticao($competicao->id);
+        return $competidoresRepository->getCompetidoresCompeticao($competicao->id, $filtros);
     }
 
     function excluirCompetidor($competicao, $competidor, $categoria)
@@ -109,7 +109,7 @@ class CompeticoesService
                         $grupo = 2;
                     }
                     
-                    $this->competicoesRepository->updateCompetidorCompeticao($competicao, $competidor, $categoria, ['grupo' => $grupo, 'ordem' => $keyc]);
+                    $this->competicoesRepository->updateCompetidorCompeticao($competicao->id, $competidor->id, $categoria->id, ['grupo' => $grupo, 'ordem' => $keyc, 'vitorias' => 0]);
                 }
             }
         }
@@ -117,8 +117,21 @@ class CompeticoesService
         $this->competicoesRepository->update($competicao, ['chave_gerada' => 1]);
     }
 
-    public function getCompetidoresCategoria($competicao, $categoria, $faixa)
+    public function getCompetidoresCategoria($competicao, $categoria, $faixa, $grupo)
     {
-        return $this->competicoesRepository->getCompetidoresCategoria($competicao, $categoria, $faixa);
+        return $this->competicoesRepository->getCompetidoresCategoria($competicao, $categoria, $faixa, $grupo);
+    }
+
+    public function vencedorRetorno($dados)
+    {
+        if($dados['tipo']){
+            $dados['vitorias'] += 1;
+        }else{
+            $dados['vitorias'] -= 1;
+        }
+
+        $this->competicoesRepository->updateCompetidorCompeticao($dados['competicao_id'], $dados['competidor_id'], $dados['categoria_id'], ['vitorias' => $dados['vitorias']]);
+        
+        return $this->competicoesRepository->firstCompetidoresCategoria($dados['competicao_id'], $dados['competidor_id'], $dados['categoria_id']);
     }
 }
