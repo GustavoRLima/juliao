@@ -170,10 +170,15 @@ class CompeticoesController extends Controller
     public function competidorVencedorRetorno(CompetidorVencedorRequest $request)
     {
         $dados = $request->validated();
-        $dados['tipo'] = $request->boolean('tipo');
 
-        $competidor = DB::transaction(function() use($dados){
-            return $this->competicoesService->vencedorRetorno($dados);
+        $competidor = DB::transaction(function() use($dados, $request){
+            if(isset($dados['tipo'])){
+                $dados['tipo'] = $request->boolean('tipo');
+                return $this->competicoesService->vencedorRetorno($dados);
+            }else{
+                $dados['derrota'] = $request->boolean('derrota');
+                return $this->competicoesService->setDerrotaCompetidor($dados);
+            }
         });
         
         return response()->json([

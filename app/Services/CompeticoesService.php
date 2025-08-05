@@ -109,7 +109,7 @@ class CompeticoesService
                         $grupo = 2;
                     }
                     
-                    $this->competicoesRepository->updateCompetidorCompeticao($competicao->id, $competidor->id, $categoria->id, ['grupo' => $grupo, 'ordem' => $keyc, 'vitorias' => 0]);
+                    $this->competicoesRepository->updateCompetidorCompeticao($competicao->id, $competidor->id, $categoria->id, ['grupo' => $grupo, 'ordem' => $keyc, 'vitorias' => 0,'derrota' => 0]);
                 }
             }
         }
@@ -131,6 +131,19 @@ class CompeticoesService
         }
 
         $this->competicoesRepository->updateCompetidorCompeticao($dados['competicao_id'], $dados['competidor_id'], $dados['categoria_id'], ['vitorias' => $dados['vitorias']]);
+        
+        return $this->competicoesRepository->firstCompetidoresCategoria($dados['competicao_id'], $dados['competidor_id'], $dados['categoria_id']);
+    }
+    
+    public function setDerrotaCompetidor($dados)
+    {
+        if($dados['derrota']){
+            $dados['derrota'] = 1;
+        }else{
+            $dados['derrota'] = 0;
+        }
+
+        $this->competicoesRepository->updateCompetidorCompeticao($dados['competicao_id'], $dados['competidor_id'], $dados['categoria_id'], ['derrota' => $dados['derrota']]);
         
         return $this->competicoesRepository->firstCompetidoresCategoria($dados['competicao_id'], $dados['competidor_id'], $dados['categoria_id']);
     }

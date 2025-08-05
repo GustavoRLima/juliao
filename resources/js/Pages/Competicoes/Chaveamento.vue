@@ -17,14 +17,43 @@ function getNextPowerOfTwo(n: number): number {
   return Math.pow(2, Math.ceil(Math.log2(n)))
 }
 
-function generateRounds(players: (CompetidoresTabela | null)[]) {
-  const rounds: (CompetidoresTabela | null)[][] = []
-  let current = players
+function generateRounds(players: CompetidoresTabela[]): (Array<CompetidoresTabela | null>)[] {
+  const rounds: (Array<CompetidoresTabela | null>)[] = []
+  let current = [...players]
+  let roundIndex = 0
+
   while (current.length > 1) {
-    rounds.push([...current])
-    current = Array(Math.ceil(current.length / 2)).fill(null)
+    // Cria o array do round atual
+    const roundAtual: (CompetidoresTabela | null)[] = new Array(current.length).fill(null)
+
+    // Preenche o round atual com os competidores
+    current.forEach((player, index) => {
+      if (player && player.vitorias >= roundIndex) {
+        roundAtual[index] = player
+      }
+    })
+
+    rounds.push(roundAtual)
+
+    // Calcula o próximo round
+    const proximoTamanho = Math.ceil(current.length / 2)
+    const proximoRound = new Array(proximoTamanho).fill(null)
+
+    // Apenas competidores com vitorias > roundIndex avançam
+    roundAtual.forEach((player, index) => {
+      if (player && player && player.vitorias > roundIndex) {
+        const nextIndex = Math.floor(index / 2)
+        proximoRound[nextIndex] = player
+      }
+    })
+
+    current = proximoRound
+    roundIndex++
   }
-  rounds.push([null]) // final
+
+  // Adiciona a final (último round) — pode ter apenas 1 ou nenhum competidor
+  rounds.push(current)
+
   return rounds
 }
 
@@ -36,7 +65,7 @@ const secondPlace = ref<CompetidoresTabela | null>(null)
 const thirdPlaces = ref<CompetidoresTabela[]>([])
 const showPodium = ref(false)
 
-function initRounds() {
+async function initRounds() {
   leftState.rounds = generateRounds(props.competidores1)
   rightState.rounds = generateRounds(props.competidores2)
 
@@ -73,7 +102,7 @@ function opponentWon(side: 'left' | 'right', roundIndex: number, matchIndex: num
 }
 
 
-async function handleClick(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number) {
+async function handleClick(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number, add_winner: boolean = false) {
   const currentSide = side === 'left' ? leftState : rightState
   const currentPlayer = currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
   const nextRound = roundIndex + 1
@@ -90,6 +119,10 @@ async function handleClick(side: 'left' | 'right', roundIndex: number, matchInde
 
   const winner = currentSide.rounds[nextRound]?.[matchIndex]
   if (winner === currentPlayer) {
+    if(Number(currentPlayer.vitorias) != (roundIndex + 1)){
+      Swal.fire('Alerta', 'Não é possivel cancelar esta vitoria!', 'warning');
+      return;
+    }
     const confirmed = await Swal.fire({
       title: `Deseja remover a vitória de ${currentPlayer.nome}?`,
       showCancelButton: true,
@@ -103,10 +136,24 @@ async function handleClick(side: 'left' | 'right', roundIndex: number, matchInde
         competidor_id: currentPlayer.id,
         categoria_id: currentPlayer.categoria_id,
         competicao_id: currentPlayer.competicao_id,
-        vitorias: currentPlayer.vitorias
+        vitorias: currentPlayer.vitorias,
+        tipo: 0
       });
 
-      currentPlayer.vitorias -= 1;
+      currentPlayer.vitorias = Number(currentPlayer.vitorias) - 1;
+
+      const otherIndex = playerIndex === 0 ? 1 : 0
+      const opponent = currentSide.rounds[roundIndex][matchIndex * 2 + otherIndex]
+      if(opponent){
+        await axiosGet(route('competicao.competidor-vencedor-retorno'), {
+          competidor_id: opponent.id,
+          categoria_id: opponent.categoria_id,
+          competicao_id: opponent.competicao_id,
+          vitorias: opponent.vitorias,
+          derrota: 0
+        });
+        opponent.derrota = 0;
+      }
     }
   } else if (!winner) {
     const confirmed = await Swal.fire({
@@ -117,16 +164,30 @@ async function handleClick(side: 'left' | 'right', roundIndex: number, matchInde
     })
     if (confirmed.isConfirmed) {
       currentSide.rounds[nextRound][matchIndex] = currentPlayer
-      
-      await axiosGet(route('competicao.competidor-vencedor-retorno'), {
-        competidor_id: currentPlayer.id,
-        categoria_id: currentPlayer.categoria_id,
-        competicao_id: currentPlayer.competicao_id,
-        vitorias: currentPlayer.vitorias,
-        tipo: 1
-      });
-
-      currentPlayer.vitorias += 1
+      if(!add_winner){
+        await axiosGet(route('competicao.competidor-vencedor-retorno'), {
+          competidor_id: currentPlayer.id,
+          categoria_id: currentPlayer.categoria_id,
+          competicao_id: currentPlayer.competicao_id,
+          vitorias: currentPlayer.vitorias,
+          tipo: 1
+        });
+  
+        currentPlayer.vitorias = Number(currentPlayer.vitorias) + 1;
+  
+        const otherIndex = playerIndex === 0 ? 1 : 0
+        const opponent = currentSide.rounds[roundIndex][matchIndex * 2 + otherIndex]
+        if(opponent){
+          await axiosGet(route('competicao.competidor-vencedor-retorno'), {
+            competidor_id: opponent.id,
+            categoria_id: opponent.categoria_id,
+            competicao_id: opponent.competicao_id,
+            vitorias: opponent.vitorias,
+            derrota: 1
+          });
+          opponent.derrota = 1;
+        }
+      }
 
       if (nextRound === currentSide.rounds.length - 1) {
         finalMatch.value[side === 'left' ? 0 : 1] = currentPlayer
@@ -187,8 +248,8 @@ const rightRounds = computed(() => rightState.rounds.slice(0, -1))
               <div v-for="(player, pIndex) in match" :key="pIndex"
                 class="w-full h-10 sm:h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-xs sm:text-sm text-center"
                 :class="{
-                  'bg-green-700': isWinner('left', rIndex, mIndex, pIndex),
-                  'opacity-50 pointer-events-none': opponentWon('left', rIndex, mIndex, pIndex),
+                  'bg-green-700': (player?.vitorias ?? 0) > rIndex,
+                  'opacity-50 pointer-events-none': (player?.derrota ?? 0) == 1,
                 }" @click="handleClick('left', rIndex, mIndex, pIndex)">
                 {{ player?.nome || '--' }}
               </div>
@@ -208,7 +269,7 @@ const rightRounds = computed(() => rightState.rounds.slice(0, -1))
                   'bg-green-700': finalWinner === player,
                   'opacity-50 pointer-events-none': finalWinner && finalWinner !== player,
                 }" @click="selectFinalWinner(player)">
-                {{ player?.nome || '--' }}
+                {{ player?.nome || '--' }} 
               </div>
             </div>
           </div>
@@ -224,8 +285,8 @@ const rightRounds = computed(() => rightState.rounds.slice(0, -1))
               <div v-for="(player, pIndex) in match" :key="pIndex"
                 class="w-full h-10 sm:h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-xs sm:text-sm text-center"
                 :class="{
-                  'bg-green-700': isWinner('right', rIndex, mIndex, pIndex),
-                  'opacity-50 pointer-events-none': opponentWon('right', rIndex, mIndex, pIndex),
+                  'bg-green-700': (player?.vitorias ?? 0) > rIndex,
+                  'opacity-50 pointer-events-none': (player?.derrota ?? 0) == 1,
                 }" @click="handleClick('right', rIndex, mIndex, pIndex)">
                 {{ player?.nome || '--' }}
               </div>

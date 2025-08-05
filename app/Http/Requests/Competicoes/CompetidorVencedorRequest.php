@@ -26,7 +26,8 @@ class CompetidorVencedorRequest extends FormRequest
             'categoria_id' => ['required', 'exists:categorias,id'],
             'competicao_id' => ['required', 'exists:competicoes,id'],
             'vitorias' => ['required'],
-            'tipo' => ['nullable']
+            'tipo' => ['nullable'],
+            'derrota' => ['nullable']
         ];
     }
 }

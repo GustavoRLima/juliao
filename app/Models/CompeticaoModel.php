@@ -24,12 +24,12 @@ class CompeticaoModel extends Model
 
     function competidores()
     {
-        return $this->belongsToMany(CompetidorModel::class, 'competicao_has_competidores', 'competicao_id', 'competidor_id')->withPivot('categoria_id', 'faixa', 'grupo', 'ordem', 'vitorias');
+        return $this->belongsToMany(CompetidorModel::class, 'competicao_has_competidores', 'competicao_id', 'competidor_id')->withPivot('categoria_id', 'faixa', 'grupo', 'ordem', 'vitorias', 'derrota');
     }
 
     function categorias()
     {
-        return $this->belongsToMany(CategoriaModel::class, 'competicao_has_competidores', 'competicao_id', 'categoria_id')->withPivot('competidor_id', 'faixa', 'grupo', 'ordem', 'vitorias');
+        return $this->belongsToMany(CategoriaModel::class, 'competicao_has_competidores', 'competicao_id', 'categoria_id')->withPivot('competidor_id', 'faixa', 'grupo', 'ordem', 'vitorias', 'derrota');
     }
 
     function categoriasWithOutPivot()

@@ -7,4 +7,5 @@ interface CompetidoresTabela {
     vitorias: number,
     categoria_id: number,
     competicao_id: number,
+    derrota: number,
 }
