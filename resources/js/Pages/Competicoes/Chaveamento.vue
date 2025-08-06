@@ -17,10 +17,12 @@ function getNextPowerOfTwo(n: number): number {
   return Math.pow(2, Math.ceil(Math.log2(n)))
 }
 
+const roundIndex = ref<number>(0)
+
 function generateRounds(players: CompetidoresTabela[]): (Array<CompetidoresTabela | null>)[] {
   const rounds: (Array<CompetidoresTabela | null>)[] = []
   let current = [...players]
-  let roundIndex = 0
+  roundIndex.value = 0
 
   while (current.length > 1) {
     // Cria o array do round atual
@@ -28,7 +30,7 @@ function generateRounds(players: CompetidoresTabela[]): (Array<CompetidoresTabel
 
     // Preenche o round atual com os competidores
     current.forEach((player, index) => {
-      if (player && player.vitorias >= roundIndex) {
+      if (player && player.vitorias >= roundIndex.value) {
         roundAtual[index] = player
       }
     })
@@ -41,14 +43,14 @@ function generateRounds(players: CompetidoresTabela[]): (Array<CompetidoresTabel
 
     // Apenas competidores com vitorias > roundIndex avançam
     roundAtual.forEach((player, index) => {
-      if (player && player && player.vitorias > roundIndex) {
+      if (player && player && player.vitorias > roundIndex.value) {
         const nextIndex = Math.floor(index / 2)
         proximoRound[nextIndex] = player
       }
     })
 
     current = proximoRound
-    roundIndex++
+    roundIndex.value++
   }
 
   // Adiciona a final (último round) — pode ter apenas 1 ou nenhum competidor
@@ -68,13 +70,44 @@ const showPodium = ref(false)
 async function initRounds() {
   leftState.rounds = generateRounds(props.competidores1)
   rightState.rounds = generateRounds(props.competidores2)
-
   finalMatch.value = [null, null]
+
   finalWinner.value = null
   secondPlace.value = null
   thirdPlaces.value = []
   showPodium.value = false
+
+  haveWiner(props.competidores1, 'left')
+  haveWiner(props.competidores2, 'right')
+
+
+  haveFinalWinner();
 }
+
+function haveWiner(players: (CompetidoresTabela | null)[], side: 'left' | 'right') {
+  let current = [...players]
+  const currentWinner = current.filter(p => p && p.vitorias >= roundIndex.value);
+  if(currentWinner.length > 0){
+    finalMatch.value[side === 'left' ? 0 : 1] = currentWinner[0]
+  }
+}
+
+function haveFinalWinner()
+{
+  const currentFinalWinner1 = props.competidores1.filter(p => p && p.vitorias > roundIndex.value);
+  if(currentFinalWinner1.length > 0){
+    finaWin(currentFinalWinner1[0], false);
+    return
+  }
+
+  const currentFinalWinner2 = props.competidores2.filter(p => p && p.vitorias > roundIndex.value);
+  if(currentFinalWinner2.length > 0){
+    finaWin(currentFinalWinner2[0], false);
+    return
+  }
+}
+
+
 
 function getMatches(round: (CompetidoresTabela | null)[]) {
   const matches = []
@@ -91,7 +124,7 @@ function isWinner(side: 'left' | 'right', roundIndex: number, matchIndex: number
   return winner && winner === currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
 }
 
-function opponentWon(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number) {
+function opponentWin(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number) {
   const currentSide = side === 'left' ? leftState : rightState
   const nextRound = roundIndex + 1
   const thisPlayer = currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
@@ -132,28 +165,11 @@ async function handleClick(side: 'left' | 'right', roundIndex: number, matchInde
     if (confirmed.isConfirmed) {
 
       currentSide.rounds[nextRound][matchIndex] = null
-      await axiosGet(route('competicao.competidor-vencedor-retorno'), {
-        competidor_id: currentPlayer.id,
-        categoria_id: currentPlayer.categoria_id,
-        competicao_id: currentPlayer.competicao_id,
-        vitorias: currentPlayer.vitorias,
-        tipo: 0
-      });
-
-      currentPlayer.vitorias = Number(currentPlayer.vitorias) - 1;
 
       const otherIndex = playerIndex === 0 ? 1 : 0
       const opponent = currentSide.rounds[roundIndex][matchIndex * 2 + otherIndex]
-      if(opponent){
-        await axiosGet(route('competicao.competidor-vencedor-retorno'), {
-          competidor_id: opponent.id,
-          categoria_id: opponent.categoria_id,
-          competicao_id: opponent.competicao_id,
-          vitorias: opponent.vitorias,
-          derrota: 0
-        });
-        opponent.derrota = 0;
-      }
+
+      declareWin(currentPlayer, opponent, 0, 0)
     }
   } else if (!winner) {
     const confirmed = await Swal.fire({
@@ -165,28 +181,11 @@ async function handleClick(side: 'left' | 'right', roundIndex: number, matchInde
     if (confirmed.isConfirmed) {
       currentSide.rounds[nextRound][matchIndex] = currentPlayer
       if(!add_winner){
-        await axiosGet(route('competicao.competidor-vencedor-retorno'), {
-          competidor_id: currentPlayer.id,
-          categoria_id: currentPlayer.categoria_id,
-          competicao_id: currentPlayer.competicao_id,
-          vitorias: currentPlayer.vitorias,
-          tipo: 1
-        });
-  
-        currentPlayer.vitorias = Number(currentPlayer.vitorias) + 1;
   
         const otherIndex = playerIndex === 0 ? 1 : 0
         const opponent = currentSide.rounds[roundIndex][matchIndex * 2 + otherIndex]
-        if(opponent){
-          await axiosGet(route('competicao.competidor-vencedor-retorno'), {
-            competidor_id: opponent.id,
-            categoria_id: opponent.categoria_id,
-            competicao_id: opponent.competicao_id,
-            vitorias: opponent.vitorias,
-            derrota: 1
-          });
-          opponent.derrota = 1;
-        }
+
+        declareWin(currentPlayer, opponent, 1, 1)
       }
 
       if (nextRound === currentSide.rounds.length - 1) {
@@ -200,7 +199,7 @@ function parOuImpar(numero: number) {
   return numero % 2 === 0 ? 1 : -1;
 }
 
-async function selectFinalWinner(player: CompetidoresTabela | null) {
+async function selectFinalWinner(player: CompetidoresTabela | null, declareWinner: boolean = true) {
   if (!player) return
 
   const confirm = await Swal.fire({
@@ -211,14 +210,50 @@ async function selectFinalWinner(player: CompetidoresTabela | null) {
   })
 
   if (confirm.isConfirmed) {
-    finalWinner.value = player
-    secondPlace.value = finalMatch.value.find(p => p !== player) || null
+    finaWin(player, declareWinner)
+  }
+}
 
-    const thirdLeft = leftState.rounds[leftState.rounds.length - 2].find(p => p !== finalMatch.value[0])
-    const thirdRight = rightState.rounds[rightState.rounds.length - 2].find(p => p !== finalMatch.value[1])
+function finaWin(player: CompetidoresTabela, declareWinner: boolean){
+  finalWinner.value = player
+  secondPlace.value = finalMatch.value.find(p => p !== player) || null
 
-    thirdPlaces.value = [thirdLeft, thirdRight].filter(Boolean) as CompetidoresTabela[]
-    showPodium.value = true
+  if(declareWinner){
+    declareWin(finalWinner.value, secondPlace.value!, 1, 1);
+  }
+
+  const thirdLeft = leftState.rounds[leftState.rounds.length - 2].find(p => p !== finalMatch.value[0])
+  const thirdRight = rightState.rounds[rightState.rounds.length - 2].find(p => p !== finalMatch.value[1])
+
+  thirdPlaces.value = [thirdLeft, thirdRight].filter(Boolean) as CompetidoresTabela[]
+  showPodium.value = true
+}
+
+async function declareWin(currentWin: CompetidoresTabela, currentLoser: CompetidoresTabela | null, tipo: number, derrota: number)
+{
+  await axiosGet(route('competicao.competidor-vencedor-retorno'), {
+    competidor_id: currentWin.id,
+    categoria_id: currentWin.categoria_id,
+    competicao_id: currentWin.competicao_id,
+    vitorias: currentWin.vitorias,
+    tipo: tipo
+  });
+
+  if(tipo == 1){
+    currentWin.vitorias = Number(currentWin.vitorias) + 1;
+  }else{
+    currentWin.vitorias = Number(currentWin.vitorias) - 1;
+  }
+
+  if(currentLoser){
+    await axiosGet(route('competicao.competidor-vencedor-retorno'), {
+      competidor_id: currentLoser.id,
+      categoria_id: currentLoser.categoria_id,
+      competicao_id: currentLoser.competicao_id,
+      vitorias: currentLoser.vitorias,
+      derrota: derrota
+    });
+    currentLoser.derrota = derrota;
   }
 }
 
