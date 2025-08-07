@@ -69,7 +69,6 @@ class CompeticoesRepository extends BaseRepository
             ->select('cc.faixa', DB::raw("COUNT(cc.competidor_id) as qtd_competidores"), 'c.nome', 'c.id')
             ->join('categorias as c', 'c.id', '=', 'cc.categoria_id')
             ->where('competicao_id', $competicao->id)
-            ->whereNotNull('grupo')
             ->groupBy('cc.faixa', 'c.nome', 'c.id')
             ->get();
     }
