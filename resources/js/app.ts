@@ -15,6 +15,7 @@ import FloatingVue from 'floating-vue';
 
 import 'floating-vue/dist/style.css';
 
+document.documentElement.classList.add('dark');
 
 // Adiciona os ícones desejados à biblioteca
 library.add(faPenToSquare, faTrash, faMagnifyingGlass, faPlus, faMinus, faClipboardList);
