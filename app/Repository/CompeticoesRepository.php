@@ -18,8 +18,10 @@ class CompeticoesRepository extends BaseRepository
         return $this->query->select('id', 'descricao', 'data_evento', 'chave_gerada')
             ->when(isset($dados['search']), function($q) use($dados){
                 $q->where(function($q) use($dados){
-                    $q->where('id', $dados['search'])
-                    ->orWhere('descricao', 'like', "{$dados['search']}%");
+                    if (is_numeric($dados['search'])) {
+                        $q->where('id', $dados['search']);
+                    }
+                    $q->orWhere('descricao', 'like', "{$dados['search']}%");
                 });
             })
             ->with('competidores')

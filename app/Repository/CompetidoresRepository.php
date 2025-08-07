@@ -23,8 +23,10 @@ class CompetidoresRepository extends BaseRepository
         return $this->query->select('id', 'nome', 'faixa', 'idade', 'peso')
             ->when(!empty($search), function($q) use($search){
                 $q->where(function($q) use($search){
-                    $q->where('id', $search)
-                    ->orWhere('nome', 'like', "{$search}%");
+                    if (is_numeric($search)) {
+                        $q->where('id', $search);
+                    }
+                    $q->orWhere('nome', 'like', "{$search}%");
                 });
             })
             ->orderBy('nome', 'ASC');

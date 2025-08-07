@@ -17,8 +17,10 @@ class CategoriaRepository extends BaseRepository
         return $this->query->select('id', 'nome', 'idade_inicio', 'idade_fim', 'peso_inicio', 'peso_fim', 'sexo')
             ->when(isset($dados['search']), function($q) use($dados){
                 $q->where(function($q) use($dados){
-                    $q->where('id', $dados['search'])
-                    ->orWhere('nome', 'like', "{$dados['search']}%");
+                    if (is_numeric($dados['search'])) {
+                        $q->where('id', $dados['search']);
+                    }
+                    $q->orWhere('nome', 'like', "{$dados['search']}%");
                 });
             })
             ->orderBy('nome', 'ASC');
