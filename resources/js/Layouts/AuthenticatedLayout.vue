@@ -166,6 +166,24 @@ const loadingStore = useLoadingStore()
                         >
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('competidores.index')"
+                            :active="route().current('competidores.*')"
+                        >
+                            Competidores
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('competicoes.index')"
+                            :active="route().current('competicoes.index')"
+                        >
+                            Competições
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('categorias.index')"
+                            :active="route().current('categorias.index')"
+                        >
+                            Categorias
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->

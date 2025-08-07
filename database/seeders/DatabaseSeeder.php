@@ -24,11 +24,13 @@ class DatabaseSeeder extends Seeder
             ]);
         }
         
-        if(count(CompetidorModel::get()) == 0){
-            $this->call([
-                CompetidoresSeed::class,
-                CategoriaSeed::class,
-            ]);
+        if(in_array(env('APP_ENV'),['dev', 'local'])){
+            if(count(CompetidorModel::get()) == 0){
+                $this->call([
+                    CompetidoresSeed::class,
+                    CategoriaSeed::class,
+                ]);
+            }
         }
 
         
