@@ -31,6 +31,10 @@ class DatabaseSeeder extends Seeder
                     CategoriaSeed::class,
                 ]);
             }
+        }else{
+            $this->call([
+                CategoriaSeed::class,
+            ]);
         }
 
         
