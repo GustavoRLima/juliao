@@ -6,6 +6,7 @@ use App\Models\CompetidorModel;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,7 +20,7 @@ class DatabaseSeeder extends Seeder
             User::insert([
                 'name' => 'Automatico sistema',
                 'email' => 'automaticosistema@example.com',
-                'password' => 12345678,
+                'password' => Hash::make(12345678),
             ]);
         }
         
