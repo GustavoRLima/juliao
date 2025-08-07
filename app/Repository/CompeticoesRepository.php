@@ -15,7 +15,7 @@ class CompeticoesRepository extends BaseRepository
 
     public function getCompeticoes($dados)
     {
-        return $this->query->select('id', 'descricao', DB::raw('DATE_FORMAT(data_evento, "%d/%m/%Y" ) as data_evento'), 'chave_gerada')
+        return $this->query->select('id', 'descricao', 'data_evento', 'chave_gerada')
             ->when(isset($dados['search']), function($q) use($dados){
                 $q->where(function($q) use($dados){
                     $q->where('id', $dados['search'])
@@ -99,7 +99,7 @@ class CompeticoesRepository extends BaseRepository
     public function getCompetidoresCategoria($competicao, $categoria, $faixa, $grupo)
     {
         return DB::table('competicao_has_competidores as cc')
-            ->select('cc.faixa', 'c.nome', 'c.id', DB::raw("COALESCE(cc.vitorias, '0') as vitorias") , 'cc.grupo', 'cc.categoria_id', 'cc.competicao_id', DB::raw("COALESCE(cc.derrota, '0') as derrota"))
+            ->select('cc.faixa', 'c.nome', 'c.id', DB::raw("COALESCE(cc.vitorias, 0) as vitorias") , 'cc.grupo', 'cc.categoria_id', 'cc.competicao_id', DB::raw("COALESCE(cc.derrota, 0) as derrota"))
             ->join('competidores as c', 'c.id', '=', 'cc.competidor_id')
             ->where('competicao_id', $competicao->id)
             ->where('categoria_id', $categoria->id)
@@ -112,7 +112,7 @@ class CompeticoesRepository extends BaseRepository
     public function firstCompetidoresCategoria($competicao_id, $competidor_id, $categoria_id)
     {
         return DB::table('competicao_has_competidores as cc')
-            ->select('cc.faixa', 'c.nome', 'c.id', DB::raw("COALESCE(cc.vitorias, '0') as vitorias") , 'cc.grupo', 'cc.categoria_id', 'cc.competicao_id', DB::raw("COALESCE(cc.derrota, '0') as derrota"))
+            ->select('cc.faixa', 'c.nome', 'c.id', DB::raw("COALESCE(cc.vitorias, 0) as vitorias") , 'cc.grupo', 'cc.categoria_id', 'cc.competicao_id', DB::raw("COALESCE(cc.derrota, 0) as derrota"))
             ->join('competidores as c', 'c.id', '=', 'cc.competidor_id')
             ->where('competicao_id', $competicao_id)
             ->where('categoria_id', $categoria_id)

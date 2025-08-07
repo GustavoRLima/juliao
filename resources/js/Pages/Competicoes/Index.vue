@@ -9,6 +9,7 @@ import { onDeleteItem, searchForm } from "@/config/usaForm.js";
 import FormInput from '@/Components/FormInput.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPersonCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import helperData from "@/helpers/datehelper"
 
 library.add(faPersonCirclePlus);
 
@@ -83,7 +84,7 @@ async function sendSearch()
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                             <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">{{ competicao.id }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">{{ competicao.descricao }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">{{ competicao.data_evento }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">{{ helperData.formatarData(competicao.data_evento) }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
                                 <NavLink
                                     :href="route('competicoes.edit', [competicao])"
