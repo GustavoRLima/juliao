@@ -4,6 +4,7 @@ import Swal from 'sweetalert2'
 import Competidores from './Competidores.vue';
 import NavLink from '@/Components/NavLink.vue';
 import { axiosGet } from '@/config/axiosConfig';
+import FormButton from '@/Components/FormButton.vue';
 
 interface Props {
   competicao: Competicao,
@@ -17,12 +18,13 @@ function getNextPowerOfTwo(n: number): number {
   return Math.pow(2, Math.ceil(Math.log2(n)))
 }
 
-const roundIndex = ref<number>(0)
+const roundIndexLeft = ref<number>(0)
+const roundIndexRigth = ref<number>(0)
 
-function generateRounds(players: CompetidoresTabela[]): (Array<CompetidoresTabela | null>)[] {
+function generateRounds(players: CompetidoresTabela[], side: 'left' | 'right'): (Array<CompetidoresTabela | null>)[] {
   const rounds: (Array<CompetidoresTabela | null>)[] = []
   let current = [...players]
-  roundIndex.value = 0
+  let roundIndex = 0;
 
   while (current.length > 1) {
     // Cria o array do round atual
@@ -30,7 +32,7 @@ function generateRounds(players: CompetidoresTabela[]): (Array<CompetidoresTabel
 
     // Preenche o round atual com os competidores
     current.forEach((player, index) => {
-      if (player && player.vitorias >= roundIndex.value) {
+      if (player && player.vitorias >= roundIndex) {
         roundAtual[index] = player
       }
     })
@@ -43,14 +45,20 @@ function generateRounds(players: CompetidoresTabela[]): (Array<CompetidoresTabel
 
     // Apenas competidores com vitorias > roundIndex avançam
     roundAtual.forEach((player, index) => {
-      if (player && player && player.vitorias > roundIndex.value) {
+      if (player && player && player.vitorias > roundIndex) {
         const nextIndex = Math.floor(index / 2)
         proximoRound[nextIndex] = player
       }
     })
 
     current = proximoRound
-    roundIndex.value++
+    roundIndex++
+  }
+
+  if(side == 'left'){
+    roundIndexLeft.value = roundIndex;
+  }else{
+    roundIndexRigth.value = roundIndex;
   }
 
   // Adiciona a final (último round) — pode ter apenas 1 ou nenhum competidor
@@ -68,8 +76,8 @@ const thirdPlaces = ref<CompetidoresTabela[]>([])
 const showPodium = ref(false)
 
 async function initRounds() {
-  leftState.rounds = generateRounds(props.competidores1)
-  rightState.rounds = generateRounds(props.competidores2)
+  leftState.rounds = generateRounds(props.competidores1, 'left')
+  rightState.rounds = generateRounds(props.competidores2, 'right')
   finalMatch.value = [null, null]
 
   finalWinner.value = null
@@ -86,28 +94,32 @@ async function initRounds() {
 
 function haveWiner(players: (CompetidoresTabela | null)[], side: 'left' | 'right') {
   let current = [...players]
-  const currentWinner = current.filter(p => p && p.vitorias >= roundIndex.value);
-  if(currentWinner.length > 0){
+  let roundIndex = 0;
+  if(side == 'left'){
+    roundIndex = roundIndexLeft.value
+  }else{
+    roundIndex = roundIndexRigth.value
+  }
+
+  const currentWinner = current.filter(p => p && p.vitorias >= roundIndex);
+  if (currentWinner.length > 0) {
     finalMatch.value[side === 'left' ? 0 : 1] = currentWinner[0]
   }
 }
 
-function haveFinalWinner()
-{
-  const currentFinalWinner1 = props.competidores1.filter(p => p && p.vitorias > roundIndex.value);
-  if(currentFinalWinner1.length > 0){
+function haveFinalWinner() {
+  const currentFinalWinner1 = props.competidores1.filter(p => p && p.vitorias > roundIndexLeft.value);
+  if (currentFinalWinner1.length > 0) {
     finaWin(currentFinalWinner1[0], false);
     return
   }
 
-  const currentFinalWinner2 = props.competidores2.filter(p => p && p.vitorias > roundIndex.value);
-  if(currentFinalWinner2.length > 0){
+  const currentFinalWinner2 = props.competidores2.filter(p => p && p.vitorias > roundIndexRigth.value);
+  if (currentFinalWinner2.length > 0) {
     finaWin(currentFinalWinner2[0], false);
     return
   }
 }
-
-
 
 function getMatches(round: (CompetidoresTabela | null)[]) {
   const matches = []
@@ -117,32 +129,14 @@ function getMatches(round: (CompetidoresTabela | null)[]) {
   return matches
 }
 
-function isWinner(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number) {
-  const currentSide = side === 'left' ? leftState : rightState
-  const nextRound = roundIndex + 1
-  const winner = currentSide.rounds[nextRound]?.[matchIndex]
-  return winner && winner === currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
-}
-
-function opponentWin(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number) {
-  const currentSide = side === 'left' ? leftState : rightState
-  const nextRound = roundIndex + 1
-  const thisPlayer = currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
-  const otherIndex = playerIndex === 0 ? 1 : 0
-  const opponent = currentSide.rounds[roundIndex][matchIndex * 2 + otherIndex]
-  const winner = currentSide.rounds[nextRound]?.[matchIndex]
-  return winner && winner === opponent
-}
-
-
 async function handleClick(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number, add_winner: boolean = false) {
   const currentSide = side === 'left' ? leftState : rightState
   const currentPlayer = currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
   const nextRound = roundIndex + 1
 
-  if(roundIndex > 0){
+  if (roundIndex > 0) {
     const numberValid = parOuImpar(playerIndex);
-    if(!currentSide.rounds[roundIndex][matchIndex * 2 + (playerIndex+numberValid)]){
+    if (!currentSide.rounds[roundIndex][matchIndex * 2 + (playerIndex + numberValid)]) {
       Swal.fire('Alerta', 'Informe o adversario para continuar!', 'warning');
       return;
     }
@@ -152,7 +146,7 @@ async function handleClick(side: 'left' | 'right', roundIndex: number, matchInde
 
   const winner = currentSide.rounds[nextRound]?.[matchIndex]
   if (winner === currentPlayer) {
-    if(Number(currentPlayer.vitorias) != (roundIndex + 1)){
+    if (Number(currentPlayer.vitorias) != (roundIndex + 1)) {
       Swal.fire('Alerta', 'Não é possivel cancelar esta vitoria!', 'warning');
       return;
     }
@@ -170,6 +164,11 @@ async function handleClick(side: 'left' | 'right', roundIndex: number, matchInde
       const opponent = currentSide.rounds[roundIndex][matchIndex * 2 + otherIndex]
 
       declareWin(currentPlayer, opponent, 0, 0)
+
+      const indexFinal = finalMatch.value.findIndex(p => p && p.id == currentPlayer.id);
+      if (indexFinal !== -1) {
+        finalMatch.value[indexFinal] = null;
+      }
     }
   } else if (!winner) {
     const confirmed = await Swal.fire({
@@ -180,8 +179,8 @@ async function handleClick(side: 'left' | 'right', roundIndex: number, matchInde
     })
     if (confirmed.isConfirmed) {
       currentSide.rounds[nextRound][matchIndex] = currentPlayer
-      if(!add_winner){
-  
+      if (!add_winner) {
+
         const otherIndex = playerIndex === 0 ? 1 : 0
         const opponent = currentSide.rounds[roundIndex][matchIndex * 2 + otherIndex]
 
@@ -202,6 +201,11 @@ function parOuImpar(numero: number) {
 async function selectFinalWinner(player: CompetidoresTabela | null, declareWinner: boolean = true) {
   if (!player) return
 
+  if (player.id == finalWinner.value?.id) {
+    cancelWinner(player)
+    return;
+  }
+
   const confirm = await Swal.fire({
     title: `Deseja declarar ${player?.nome} como vencedor da final?`,
     showCancelButton: true,
@@ -214,23 +218,48 @@ async function selectFinalWinner(player: CompetidoresTabela | null, declareWinne
   }
 }
 
-function finaWin(player: CompetidoresTabela, declareWinner: boolean){
+async function cancelWinner(player: CompetidoresTabela) {
+  const confirm = await Swal.fire({
+    title: `Deseja remover a vitoria do ${player?.nome}?`,
+    showCancelButton: true,
+    confirmButtonText: 'Sim',
+    cancelButtonText: 'Não'
+  });
+
+  if (confirm.isConfirmed) {
+    if (finalWinner.value) {
+      declareWin(finalWinner.value, secondPlace.value, 0, 0);
+
+      finalWinner.value = null
+      secondPlace.value = null
+      thirdPlaces.value = []
+      showPodium.value = false
+    }
+  }
+}
+
+function finaWin(player: CompetidoresTabela, declareWinner: boolean) {
   finalWinner.value = player
   secondPlace.value = finalMatch.value.find(p => p !== player) || null
 
-  if(declareWinner){
+  if (declareWinner) {
     declareWin(finalWinner.value, secondPlace.value!, 1, 1);
   }
+    let thirdLeft = null
+    let thirdRight = null
+  if(leftState.rounds.length > 1){
+    thirdLeft = leftState.rounds[leftState.rounds.length - 2].find(p => p !== finalMatch.value[0])
+  }
 
-  const thirdLeft = leftState.rounds[leftState.rounds.length - 2].find(p => p !== finalMatch.value[0])
-  const thirdRight = rightState.rounds[rightState.rounds.length - 2].find(p => p !== finalMatch.value[1])
+  if(rightState.rounds.length > 1){
+    thirdRight = rightState.rounds[rightState.rounds.length - 2].find(p => p !== finalMatch.value[1])
+  }
 
   thirdPlaces.value = [thirdLeft, thirdRight].filter(Boolean) as CompetidoresTabela[]
   showPodium.value = true
 }
 
-async function declareWin(currentWin: CompetidoresTabela, currentLoser: CompetidoresTabela | null, tipo: number, derrota: number)
-{
+async function declareWin(currentWin: CompetidoresTabela, currentLoser: CompetidoresTabela | null, tipo: number, derrota: number) {
   await axiosGet(route('competicao.competidor-vencedor-retorno'), {
     competidor_id: currentWin.id,
     categoria_id: currentWin.categoria_id,
@@ -239,13 +268,13 @@ async function declareWin(currentWin: CompetidoresTabela, currentLoser: Competid
     tipo: tipo
   });
 
-  if(tipo == 1){
+  if (tipo == 1) {
     currentWin.vitorias = Number(currentWin.vitorias) + 1;
-  }else{
+  } else {
     currentWin.vitorias = Number(currentWin.vitorias) - 1;
   }
 
-  if(currentLoser){
+  if (currentLoser) {
     await axiosGet(route('competicao.competidor-vencedor-retorno'), {
       competidor_id: currentLoser.id,
       categoria_id: currentLoser.categoria_id,
@@ -259,7 +288,7 @@ async function declareWin(currentWin: CompetidoresTabela, currentLoser: Competid
 
 onMounted(() => {
   initRounds()
-})
+});
 
 const leftRounds = computed(() => leftState.rounds.slice(0, -1))
 const rightRounds = computed(() => rightState.rounds.slice(0, -1))
@@ -276,10 +305,10 @@ const rightRounds = computed(() => rightState.rounds.slice(0, -1))
         <!-- Lado Esquerdo -->
         <div class="flex">
           <div v-for="(round, rIndex) in leftRounds" :key="'left-' + rIndex"
-            class="flex flex-col items-center mx-1 sm:mx-2"
-            :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }">
+            class="flex flex-col items-center mx-1 sm:mx-2" :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }">
             <div v-for="(match, mIndex) in getMatches(round)" :key="'left-match-' + mIndex"
-              class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-40 sm:w-48 mt-auto mb-auto" :style="(rIndex == 0) ? 'margin-top: 10px' : ''">
+              class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-40 sm:w-48 mt-auto mb-auto"
+              :style="(rIndex == 0) ? 'margin-top: 10px' : ''">
               <div v-for="(player, pIndex) in match" :key="pIndex"
                 class="w-full h-10 sm:h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-xs sm:text-sm text-center"
                 :class="{
@@ -304,7 +333,7 @@ const rightRounds = computed(() => rightState.rounds.slice(0, -1))
                   'bg-green-700': finalWinner === player,
                   'opacity-50 pointer-events-none': finalWinner && finalWinner !== player,
                 }" @click="selectFinalWinner(player)">
-                {{ player?.nome || '--' }} 
+                {{ player?.nome || '--' }}
               </div>
             </div>
           </div>
@@ -313,10 +342,10 @@ const rightRounds = computed(() => rightState.rounds.slice(0, -1))
         <!-- Lado Direito (reverso) -->
         <div class="flex flex-row-reverse">
           <div v-for="(round, rIndex) in rightRounds" :key="'right-' + rIndex"
-            class="flex flex-col items-center mx-1 sm:mx-2"
-            :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }">
+            class="flex flex-col items-center mx-1 sm:mx-2" :style="{ marginTop: `${(2 ** rIndex - 1) * 16}px` }">
             <div v-for="(match, mIndex) in getMatches(round)" :key="'right-match-' + mIndex"
-              class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-40 sm:w-48 mt-auto mb-auto" :style="(rIndex == 0) ? 'margin-top: 10px' : ''">
+              class="flex flex-col justify-center items-center border border-white rounded-lg mb-6 w-40 sm:w-48 mt-auto mb-auto"
+              :style="(rIndex == 0) ? 'margin-top: 10px' : ''">
               <div v-for="(player, pIndex) in match" :key="pIndex"
                 class="w-full h-10 sm:h-12 flex items-center justify-center cursor-pointer text-white hover:bg-gray-700 text-xs sm:text-sm text-center"
                 :class="{
@@ -356,15 +385,6 @@ const rightRounds = computed(() => rightState.rounds.slice(0, -1))
           </tr>
         </tbody>
       </table>
-    </div>
-    <div class="flex justify-end p-4">
-      <NavLink
-          :href="route('competicao.gerar-tabela-competicao', [competicao])"
-          class="mr-1 items-center rounded-md border border-transparent bg-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-300 focus:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-stone-950 dark:bg-gray-300 dark:text-stone-950 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-gray-300 dark:active:bg-gray-300"
-          :button="true"
-      >
-          Voltar
-      </NavLink>
     </div>
   </div>
 </template>
