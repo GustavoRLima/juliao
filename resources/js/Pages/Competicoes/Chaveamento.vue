@@ -132,10 +132,10 @@ function getRange(index: number) {
   return { start, end };
 }
 
-function maisDeTresPreenchidos(arr: any[], start: number, end: number): boolean {
+function maisDeTresPreenchidos(arr: (CompetidoresTabela | null)[], start: number, end: number): boolean {
   let count = 0
   for (let i = start; i <= end && i < arr.length; i++) {
-    if (arr[i] != null) { // verifica se está preenchido
+    if (i in arr) {  // verifica se está preenchido
       count++
       if (count >= 3) {
         return true
@@ -156,8 +156,11 @@ async function handleClick(side: 'left' | 'right', roundIndex: number, matchInde
     const matchesBefore = getRange(matchIndex * 2 + playerIndex);
 
     let indexRoundBefore = currentSide.rounds[beforeRound];
-    const treeMore = maisDeTresPreenchidos(indexRoundBefore, matchesBefore.start, matchesBefore.end);
-
+    let treeMore = true;
+    if(indexRoundBefore.length > 0){
+      treeMore = maisDeTresPreenchidos(indexRoundBefore, matchesBefore.start, matchesBefore.end);
+    }
+    
     if (!currentSide.rounds[roundIndex][matchIndex * 2 + (playerIndex + numberValid)] && treeMore) {
       Swal.fire('Alerta', 'Informe o adversario para continuar!', 'warning');
       return;
