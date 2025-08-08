@@ -14,10 +14,6 @@ interface Props {
 
 const props = defineProps<Props>()
 
-function getNextPowerOfTwo(n: number): number {
-  return Math.pow(2, Math.ceil(Math.log2(n)))
-}
-
 const roundIndexLeft = ref<number>(0)
 const roundIndexRigth = ref<number>(0)
 
@@ -129,6 +125,26 @@ function getMatches(round: (CompetidoresTabela | null)[]) {
   return matches
 }
 
+function getRange(index: number) {
+  const grupo = Math.floor(index / 2); // Descobre o grupo
+  const start = grupo * 4; // Início do intervalo
+  const end = start + 3;   // Fim do intervalo
+  return { start, end };
+}
+
+function maisDeTresPreenchidos(arr: any[], start: number, end: number): boolean {
+  let count = 0
+  for (let i = start; i <= end && i < arr.length; i++) {
+    if (arr[i] != null) { // verifica se está preenchido
+      count++
+      if (count >= 3) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
 async function handleClick(side: 'left' | 'right', roundIndex: number, matchIndex: number, playerIndex: number, add_winner: boolean = false) {
   const currentSide = side === 'left' ? leftState : rightState
   const currentPlayer = currentSide.rounds[roundIndex][matchIndex * 2 + playerIndex]
@@ -136,7 +152,13 @@ async function handleClick(side: 'left' | 'right', roundIndex: number, matchInde
 
   if (roundIndex > 0) {
     const numberValid = parOuImpar(playerIndex);
-    if (!currentSide.rounds[roundIndex][matchIndex * 2 + (playerIndex + numberValid)]) {
+    const beforeRound = roundIndex-1;
+    const matchesBefore = getRange(matchIndex * 2 + playerIndex);
+
+    let indexRoundBefore = currentSide.rounds[beforeRound];
+    const treeMore = maisDeTresPreenchidos(indexRoundBefore, matchesBefore.start, matchesBefore.end);
+
+    if (!currentSide.rounds[roundIndex][matchIndex * 2 + (playerIndex + numberValid)] && treeMore) {
       Swal.fire('Alerta', 'Informe o adversario para continuar!', 'warning');
       return;
     }
